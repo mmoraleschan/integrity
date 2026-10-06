@@ -1,0 +1,1048 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Complementa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: barra de pasos fija (Lección → Recursos → Insumos → Integrar); Insumos es una matriz subtema × (a, b, c) con vista previa debajo; Integrar es selector a la izquierda y documento paginado a la derecha */
+:root{
+  --bg:#EEF2EF; --paper:#FFFFFF; --sunk:#F6F8F6; --ink:#14302A; --muted:#566A61; --line:#D3DDD8;
+  --pine:#1F5C4D; --pine-soft:#E2EEE9; --gold:#B87F00; --gold-soft:#FBF0D4; --sky:#245E8F; --sky-soft:#E3EEF7;
+  --risk:#B4462F; --risk-soft:#F8E6E1; --on-ink:#F3F6F4; --band:#14302A; --on-band:#F3F6F4;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --f-read:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1815; --paper:#15221E; --sunk:#111C19; --ink:#E3EDE8; --muted:#9BB0A7; --line:#283B35;
+  --pine:#72C4AA; --pine-soft:#1B332D; --gold:#EDB63A; --gold-soft:#372C11; --sky:#86B9E3; --sky-soft:#172A3A;
+  --risk:#EF8B73; --risk-soft:#38201A; --on-ink:#0E1815; --band:#0A2620; --on-band:#E3EDE8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1815; --paper:#15221E; --sunk:#111C19; --ink:#E3EDE8; --muted:#9BB0A7; --line:#283B35;
+  --pine:#72C4AA; --pine-soft:#1B332D; --gold:#EDB63A; --gold-soft:#372C11; --sky:#86B9E3; --sky-soft:#172A3A;
+  --risk:#EF8B73; --risk-soft:#38201A; --on-ink:#0E1815; --band:#0A2620; --on-band:#E3EDE8; color-scheme:dark}
+.force-light{--bg:#EEF2EF;--paper:#FFFFFF;--sunk:#F6F8F6;--ink:#14302A;--muted:#566A61;--line:#D3DDD8;--pine:#1F5C4D;--pine-soft:#E2EEE9;--gold:#B87F00;--gold-soft:#FBF0D4;--sky:#245E8F;--sky-soft:#E3EEF7;--risk:#B4462F;--risk-soft:#F8E6E1;--on-ink:#F3F6F4;--band:#14302A;--on-band:#F3F6F4;color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+p{margin:0}
+button,select,input,textarea{font:inherit;color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:18px 72px}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.hint{color:var(--muted);font-size:14.5px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);background:var(--paper);border-radius:7px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:14.5px;white-space:nowrap}
+.btn:hover{border-color:var(--pine)}
+.btn.primary{background:var(--pine);border-color:var(--pine);color:var(--on-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.quiet{border-color:transparent;background:transparent;color:var(--pine)}
+.btn.quiet:hover{background:var(--pine-soft)}
+.btn.small{padding:5px 10px;font-size:13.5px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.spacer{flex:1}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:22px;display:grid;gap:16px;min-width:0;align-content:start}
+.card h2{font-size:23px}
+.notice{border-left:4px solid var(--gold);background:var(--gold-soft);padding:10px 14px;border-radius:0 7px 7px 0;font-size:14.5px}
+.notice.err{border-color:var(--risk);background:var(--risk-soft)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--sunk);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+.pill.ok{background:var(--pine-soft);color:var(--pine);border-color:transparent}
+.pill.run{background:var(--gold-soft);color:var(--ink);border-color:transparent}
+.pill.bad{background:var(--risk-soft);color:var(--risk);border-color:transparent}
+.pill.run::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.3}}
+@media (prefers-reduced-motion:reduce){.pill.run::before{animation:none}}
+
+/* header + stepper */
+header.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;padding-bottom:14px}
+.brand{display:flex;gap:14px;align-items:center}
+.mark{width:40px;height:40px;border-radius:10px;background:var(--band);display:grid;place-items:center;flex:none}
+.mark svg{width:24px;height:24px}
+.brand h1{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.brand p{font-size:13.5px;color:var(--muted)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.toolbar select{border:1px solid var(--line);background:var(--paper);border-radius:7px;padding:8px 10px;max-width:240px;font-size:14.5px}
+nav.steps{position:sticky;top:env(safe-area-inset-top,0px);z-index:8;background:var(--bg);margin-inline:-20px;padding:8px 20px 12px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.step{position:relative;border:0;background:transparent;padding:8px 10px;display:flex;gap:10px;align-items:center;cursor:pointer;text-align:left;border-radius:8px;min-width:0}
+.step:hover{background:var(--paper)}
+.step .n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:14px;border:2px solid var(--line);color:var(--muted);flex:none;background:var(--paper)}
+.step span.t{display:grid;min-width:0}
+.step strong{font-size:14.5px}
+.step small{color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.step.done .n{border-color:var(--pine);background:var(--pine-soft);color:var(--pine)}
+.step.on{background:var(--paper);box-shadow:0 0 0 1px var(--line)}
+.step.on .n{border-color:var(--pine);background:var(--pine);color:var(--on-ink)}
+@media (max-width:760px){nav.steps{grid-template-columns:repeat(4,auto);overflow-x:auto}.step small{display:none}}
+main{margin-top:22px}
+.panel{display:grid;gap:18px}
+
+/* paso 1 */
+.split{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.split{grid-template-columns:1fr}}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.field{display:grid;gap:5px;min-width:0}
+.field.wide{grid-column:1/-1}
+.field label{font-weight:700;font-size:14px}
+.field label i{font-style:normal;font-weight:400;color:var(--muted)}
+.field input,.field textarea,.field select{border:1px solid var(--line);background:var(--sunk);border-radius:7px;padding:9px 11px;width:100%}
+.field textarea{min-height:80px;resize:vertical}
+.field small{color:var(--muted);font-size:12.5px}
+fieldset{border:0;padding:0;margin:0;display:grid;gap:12px}
+legend{font-family:var(--f-display);font-weight:700;font-size:15px;margin-bottom:6px}
+.outputs{display:grid;gap:10px}
+.out{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start;padding:12px;border-radius:8px;background:var(--sunk)}
+.out .ico{width:44px;height:44px;border-radius:9px;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:18px}
+.out h4{font-size:15.5px}
+.out p{font-size:13.5px;color:var(--muted)}
+.ico.a{background:var(--band);color:var(--gold)}
+.ico.b{background:var(--pine-soft);color:var(--pine)}
+.ico.c{background:var(--gold-soft);color:var(--gold)}
+.ico.d{background:var(--sky-soft);color:var(--sky)}
+
+/* paso 2 */
+.drop{border:2px dashed var(--line);border-radius:10px;padding:30px 18px;text-align:center;display:grid;gap:6px;justify-items:center;background:var(--sunk);cursor:pointer}
+.drop.over{border-color:var(--pine);background:var(--pine-soft)}
+.drop strong{font-family:var(--f-display);font-size:19px}
+.drop svg{width:34px;height:34px;color:var(--pine)}
+.srcs{display:grid;gap:8px}
+.src{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:8px 14px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--paper)}
+.src .ord{font-family:var(--f-display);font-weight:800;font-size:15px;color:var(--pine);text-align:center}
+.src.ref .ord{font-family:var(--f-mono);font-size:10.5px;color:var(--gold)}
+.src .meta{display:grid;gap:4px;min-width:0}
+.src input{border:1px solid transparent;background:transparent;border-radius:5px;padding:4px 6px;font-weight:600;width:100%}
+.src input:hover,.src input:focus{border-color:var(--line);background:var(--sunk)}
+.src small{color:var(--muted);font-size:12.5px;padding-left:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.src .act{display:flex;gap:4px;align-items:center}
+.src select{border:1px solid var(--line);background:var(--sunk);border-radius:6px;padding:5px 8px;font-size:13.5px}
+@media (max-width:640px){.src{grid-template-columns:28px minmax(0,1fr)}.src .act{grid-column:1/-1;flex-wrap:wrap}}
+.stat{display:grid;gap:2px;padding:12px 14px;border-radius:8px;background:var(--sunk)}
+.stat b{font-family:var(--f-display);font-size:26px;line-height:1}
+.stat span{font-size:13px;color:var(--muted)}
+.empty{border:1px dashed var(--line);border-radius:10px;padding:26px;text-align:center;color:var(--muted);display:grid;gap:10px;justify-items:center}
+
+/* paso 3: matriz */
+.engine{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--paper)}
+.seg button{border:0;background:transparent;padding:8px 14px;cursor:pointer;font-weight:600;font-size:14px}
+.seg button.on{background:var(--ink);color:var(--on-ink)}
+.mx{display:grid;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--paper)}
+.mx-row{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));border-top:1px solid var(--line)}
+.mx-row:first-child{border-top:0}
+.mx-head{background:var(--sunk)}
+.mx-head>div{padding:10px 14px;font-family:var(--f-display);font-weight:700;font-size:13.5px;display:flex;gap:8px;align-items:center}
+.mx-head .k{font-family:var(--f-mono);color:var(--gold);font-size:12px}
+.mx-sub{padding:12px 14px;display:grid;gap:2px;align-content:center;min-width:0}
+.mx-sub b{font-size:14.5px;line-height:1.3}
+.mx-sub span{font-size:12px;color:var(--muted);font-family:var(--f-mono)}
+.mx-cell{padding:10px 12px;border-left:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center;cursor:pointer;min-width:0}
+.mx-cell:hover{background:var(--sunk)}
+.mx-cell.sel{background:var(--pine-soft);box-shadow:inset 3px 0 0 var(--pine)}
+.mx-cell .lbl{display:none;font-family:var(--f-mono);font-size:11px;color:var(--gold);width:100%}
+@media (max-width:760px){.mx-head{display:none}.mx-row{grid-template-columns:1fr}.mx-cell{border-left:0;border-top:1px dashed var(--line)}.mx-cell .lbl{display:block}}
+.preview{display:grid;gap:14px}
+.pv-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.pv-bar h3{font-size:19px}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:30;background:rgba(10,20,17,.55);display:grid;place-items:center;padding:16px}
+.modal-box{background:var(--paper);border-radius:12px;max-width:760px;width:100%;max-height:calc(100% - 32px);overflow:auto;padding:22px;display:grid;gap:14px}
+.modal-box textarea{width:100%;border:1px solid var(--line);background:var(--sunk);border-radius:7px;padding:10px;font-family:var(--f-mono);font-size:12.5px;min-height:150px}
+.steps-list{margin:0;padding-left:20px;display:grid;gap:4px;font-size:14.5px}
+
+/* paso 4 */
+.compose{display:grid;grid-template-columns:320px minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:980px){.compose{grid-template-columns:1fr}}
+.picker{position:sticky;top:84px;display:grid;gap:12px;max-height:calc(100vh - 100px);overflow:auto}
+@media (max-width:980px){.picker{position:static;max-height:none}}
+.picker details{border:1px solid var(--line);border-radius:8px;background:var(--sunk)}
+.picker summary{padding:10px 12px;cursor:pointer;font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center}
+.picker summary input{margin:0}
+.picker .opts{padding:0 12px 12px 34px;display:grid;gap:6px}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;line-height:1.35}
+.chk input{margin-top:2px;accent-color:var(--pine)}
+.chk em{font-style:normal;color:var(--muted);font-family:var(--f-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;margin-right:4px}
+.optgroup{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:6px}
+
+/* ===== Lo esencial (infografía) ===== */
+.ess{background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:grid}
+.ess-top{background:var(--band);color:var(--on-band);padding:24px 26px 22px;display:grid;grid-template-columns:auto 1fr;gap:4px 18px;align-items:end}
+.ess-top .num{font-family:var(--f-display);font-weight:800;font-size:64px;line-height:.85;color:var(--gold);letter-spacing:-.04em;grid-row:span 2}
+.ess-top .eyebrow{color:var(--gold)}
+.ess-top h3{font-size:clamp(21px,2.6vw,28px);font-weight:700;color:var(--on-band)}
+.ess-q{padding:18px 26px;border-bottom:1px solid var(--line);font-family:var(--f-read);font-style:italic;font-size:clamp(17px,2vw,20px);line-height:1.4;color:var(--pine)}
+.ess-ideas{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0}
+.ess-idea{padding:18px 26px;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);align-content:start}
+.ess-idea i{font-style:normal;font-family:var(--f-display);font-weight:800;font-size:30px;line-height:1;color:var(--gold);grid-row:span 2}
+.ess-idea b{font-family:var(--f-display);font-size:17px;line-height:1.25}
+.ess-idea p{font-size:15px;color:var(--muted);line-height:1.45}
+.ess-key{padding:18px 26px;background:var(--gold-soft);font-family:var(--f-display);font-weight:600;font-size:clamp(17px,2vw,20px);line-height:1.3;display:grid;gap:4px}
+.ess-key .eyebrow{color:var(--gold)}
+.ess.export{width:1000px}
+.ess.export .ess-ideas{grid-template-columns:1fr 1fr}
+
+/* ===== Documento de lectura / capítulo ===== */
+.paper{background:var(--paper);border:1px solid var(--line);border-radius:6px;box-shadow:0 1px 0 var(--line),0 12px 30px -18px rgba(20,48,42,.35);padding:clamp(22px,5vw,64px);max-width:860px;width:100%;margin-inline:auto}
+.chap{font-family:var(--f-read);font-size:17px;line-height:1.65;display:grid;gap:14px}
+.chap p,.chap li{max-width:68ch}
+.chap h2.ch-title{font-family:var(--f-display);font-size:clamp(28px,4vw,40px);line-height:1.1;letter-spacing:-.015em}
+.chap h3{font-size:clamp(21px,2.6vw,26px);margin-top:18px;color:var(--pine)}
+.chap h4{font-size:17px;margin-top:8px}
+.chap ul,.chap ol{margin:0;padding-left:22px;display:grid;gap:4px}
+.ch-open{display:grid;gap:8px;padding-bottom:16px;border-bottom:2px solid var(--ink)}
+.ch-open .kick{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--gold)}
+.ch-open .by{font-family:var(--f-body);font-size:14px;color:var(--muted)}
+.lede{font-size:clamp(18px,2.2vw,21px);line-height:1.5;color:var(--ink)}
+.guide{background:var(--sunk);border-radius:8px;padding:16px 20px;display:grid;gap:8px}
+.guide .t{font-family:var(--f-display);font-weight:700;font-size:15px}
+.guide ol{font-family:var(--f-body);font-size:16px}
+.co{border-radius:0 8px 8px 0;padding:14px 18px;display:grid;gap:6px;border-left:4px solid var(--pine);background:var(--pine-soft);font-size:16px}
+.co .t{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+.co h5{font-family:var(--f-display);font-size:17px;margin:0;line-height:1.25}
+.co p{max-width:none}
+.co dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-family:var(--f-body);font-size:15px}
+.co dt{font-weight:700;color:var(--muted)}
+.co dd{margin:0}
+@media (max-width:560px){.co dl{grid-template-columns:1fr}}
+.co.def{border-color:var(--pine);background:var(--pine-soft)}.co.def .t{color:var(--pine)}
+.co.key{border-color:var(--gold);background:var(--gold-soft)}.co.key .t{color:var(--gold)}
+.co.key p{font-family:var(--f-display);font-weight:600;font-size:17.5px;line-height:1.35}
+.co.impl{border-color:var(--sky);background:var(--sky-soft)}.co.impl .t{color:var(--sky)}
+.co.refl{border-color:var(--muted);background:var(--sunk)}.co.refl .t{color:var(--muted)}
+.co.ex{border-color:var(--pine);background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--pine)}.co.ex .t{color:var(--pine)}
+.co.case{border-color:var(--ink);background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--ink)}.co.case .t{color:var(--ink)}
+.co.try{border-color:var(--gold);background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--gold)}.co.try .t{color:var(--gold)}
+.co.bad{border-color:var(--risk);background:var(--risk-soft)}.co.bad .t{color:var(--risk)}
+.co .warn{font-family:var(--f-mono);font-size:10.5px;color:var(--risk);letter-spacing:.05em;text-transform:uppercase}
+.quote{border-left:3px solid var(--gold);padding-left:16px;font-style:italic;color:var(--pine)}
+.quote small{display:block;font-style:normal;color:var(--muted);font-family:var(--f-body);font-size:13.5px;margin-top:4px}
+.tbl{overflow-x:auto}
+.tbl table{border-collapse:collapse;width:100%;font-family:var(--f-body);font-size:14.5px;line-height:1.4}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+.tbl th{background:var(--band);color:var(--on-band);font-weight:700;font-size:13.5px}
+.tbl tr:nth-child(even) td{background:var(--sunk)}
+.tbl caption{caption-side:bottom;text-align:left;font-size:12.5px;color:var(--muted);padding-top:6px}
+.refs{font-family:var(--f-body);font-size:14px;color:var(--muted)}
+.refs li{padding-left:22px;text-indent:-22px;list-style:none}
+.refs ul{padding:0}
+.doc-cover{display:grid;gap:14px;padding-block:24px 30px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.doc-cover h1{font-size:clamp(32px,5vw,52px);letter-spacing:-.02em;line-height:1.05}
+.doc-cover .kick{font-family:var(--f-mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--gold)}
+.doc-cover .toc{display:grid;gap:4px;font-size:15px}
+.doc-cover .toc span{font-family:var(--f-display);font-weight:700;color:var(--pine);margin-right:8px}
+.ch-sep{height:1px;background:var(--line);margin-block:34px}
+
+footer{margin-top:40px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;max-width:80ch}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--on-ink);padding:10px 16px;border-radius:8px;font-size:14.5px;z-index:40;max-width:calc(100% - 32px)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.offscreen{position:fixed;left:-12000px;top:0}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="8" height="16" rx="1.5" stroke="#B87F00" stroke-width="2"/><path d="M14 6h7M14 10h7M14 14h7M14 18h5" stroke="#F3F6F4" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <div><h1>Complementa</h1><p>Del guion de video al material de lectura de la lección</p></div>
+    </div>
+    <div class="toolbar">
+      <label class="sr" for="projSel">Lecciones guardadas</label>
+      <select id="projSel"><option value="">Lecciones guardadas…</option></select>
+      <button class="btn" id="newBtn" type="button">Nueva lección</button>
+      <button class="btn quiet" id="sampleBtn" type="button">Ver ejemplo</button>
+    </div>
+  </header>
+
+  <nav class="steps" aria-label="Pasos">
+    <button class="step" data-step="1" type="button"><span class="n">1</span><span class="t"><strong>Lección</strong><small id="s1">Curso, lección y subtema</small></span></button>
+    <button class="step" data-step="2" type="button"><span class="n">2</span><span class="t"><strong>Recursos</strong><small id="s2">Guiones y referencias</small></span></button>
+    <button class="step" data-step="3" type="button"><span class="n">3</span><span class="t"><strong>Insumos</strong><small id="s3">a · b · c por subtema</small></span></button>
+    <button class="step" data-step="4" type="button"><span class="n">4</span><span class="t"><strong>Integrar</strong><small id="s4">Documento final</small></span></button>
+  </nav>
+
+  <main>
+  <!-- PASO 1 -->
+  <section class="panel" id="p1" hidden>
+    <div class="split">
+      <div class="card">
+        <div><span class="eyebrow">Paso 1 de 4</span><h2>¿Para qué lección son los materiales?</h2></div>
+        <fieldset>
+          <legend>La lección</legend>
+          <div class="form">
+            <div class="field"><label for="f_curso">Curso</label><input id="f_curso" placeholder="AI Technical for Pedagogical Leadership"></div>
+            <div class="field"><label for="f_leccion">Lección</label><input id="f_leccion" placeholder="Lección 1. Hacia el diseño de experiencias formativas con IA"></div>
+            <div class="field wide"><label for="f_subtema">Subtema <i>(uno por línea, en el orden de los videos)</i></label><textarea id="f_subtema" rows="3" placeholder="1.1 Oportunidades y desafíos para enseñar en la era de la IA&#10;1.2 IA al servicio del desarrollo de competencias del siglo XXI"></textarea><small>Cada subtema se convierte en un capítulo y nombra al guion que le corresponde en el paso 2.</small></div>
+            <div class="field wide"><label for="f_tema">Objetivo de la lección</label><textarea id="f_tema" placeholder="Valorar la IA como un medio para soportar la pedagogía y el acceso igualitario al conocimiento."></textarea></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Pertinencia</legend>
+          <div class="form">
+            <div class="field"><label for="f_publico">Público</label><input id="f_publico" placeholder="Docentes universitarios de distintas facultades"><small>Quién leerá los materiales.</small></div>
+            <div class="field"><label for="f_contexto">Contexto de aplicación</label><input id="f_contexto" placeholder="Ingeniería, salud, derecho y educación en Guatemala"><small>Disciplinas, país o sector para situar los ejemplos.</small></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Créditos del documento <span class="hint">(opcional)</span></legend>
+          <div class="form">
+            <div class="field"><label for="f_autor">Autoría</label><input id="f_autor" placeholder="Nombre del autor o autora"></div>
+            <div class="field"><label for="f_adapt">Adaptación o revisión</label><input id="f_adapt" placeholder="Nombre de quien adapta o revisa"></div>
+          </div>
+        </fieldset>
+        <div class="row"><span class="spacer"></span><button class="btn primary" id="to2" type="button">Continuar a recursos</button></div>
+      </div>
+      <aside class="card">
+        <div><span class="eyebrow">Lo que obtendrá por cada subtema</span><h2>Tres insumos y un documento</h2></div>
+        <div class="outputs">
+          <div class="out"><div class="ico a">a</div><div><h4>Lo esencial</h4><p>Infografía con las 3 a 5 ideas más importantes del video. Imagen lista para el aula virtual.</p></div></div>
+          <div class="out"><div class="ico b">b</div><div><h4>Documento de lectura</h4><p>Desarrolla el subtema con definiciones, tablas, ideas clave y referencias. PDF diagramado.</p></div></div>
+          <div class="out"><div class="ico c">c</div><div><h4>Ejemplos y casos</h4><p>Casos documentados y ejemplos situados en el contexto de su público, más un ejercicio para probar.</p></div></div>
+          <div class="out"><div class="ico d">∑</div><div><h4>Documento integrado</h4><p>Usted elige los elementos y Complementa los intercala en un solo capítulo por subtema, en PDF o HTML.</p></div></div>
+        </div>
+        <button class="btn" type="button" data-sample="1">Ver un resultado de ejemplo</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- PASO 2 -->
+  <section class="panel" id="p2" hidden>
+    <div class="split">
+      <div class="card">
+        <div><span class="eyebrow">Paso 2 de 4</span><h2>Adjunte los recursos de la lección</h2></div>
+        <p class="hint">Cada <b>guion de video</b> corresponde a un subtema. El <b>documento general</b> aporta información de la lección y, sobre todo, sus referencias. Se aceptan Word, PDF, .txt y .md.</p>
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Seleccionar archivos">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16V4m0 0l-4 4m4-4l4 4M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <strong>Arrastre los archivos aquí</strong>
+          <span class="hint">o haga clic para seleccionarlos</span>
+          <input type="file" id="fileIn" multiple accept=".docx,.pdf,.txt,.md" hidden>
+        </div>
+        <details>
+          <summary class="hint" style="cursor:pointer">Pegar texto en lugar de subir un archivo</summary>
+          <div class="form" style="margin-top:10px">
+            <div class="field"><label for="pasteTitle">Título</label><input id="pasteTitle" placeholder="1.1 Oportunidades y desafíos"></div>
+            <div class="field"><label for="pasteKind">Tipo</label><select id="pasteKind"><option value="guion">Guion de video (subtema)</option><option value="general">Documento general / referencias</option></select></div>
+            <div class="field wide"><label for="pasteText">Texto</label><textarea id="pasteText" style="min-height:130px"></textarea></div>
+          </div>
+          <div class="row" style="margin-top:8px"><span class="spacer"></span><button class="btn" id="pasteAdd" type="button">Agregar</button></div>
+        </details>
+        <div id="srcMsg"></div>
+        <div class="srcs" id="srcList"></div>
+      </div>
+      <aside class="card">
+        <div><span class="eyebrow">Resumen</span><h2>Recursos de la lección</h2></div>
+        <div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="stat"><b id="nSub">0</b><span>subtemas (guiones)</span></div>
+          <div class="stat"><b id="nRef">0</b><span>documentos de referencia</span></div>
+        </div>
+        <ul class="hint" style="margin:0;padding-left:18px;display:grid;gap:6px">
+          <li>El orden de la lista es el orden de los capítulos.</li>
+          <li>Cada guion toma el nombre del subtema indicado en el paso 1, en el mismo orden; puede editarlo aquí.</li>
+          <li>Si el guion de bienvenida no necesita materiales, márquelo como documento general.</li>
+        </ul>
+        <div class="row"><button class="btn" id="back1" type="button">Volver</button><span class="spacer"></span><button class="btn primary" id="to3" type="button">Continuar a insumos</button></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- PASO 3 -->
+  <section class="panel" id="p3" hidden>
+    <div class="card">
+      <div class="engine">
+        <div><span class="eyebrow">Paso 3 de 4</span><h2>Genere los insumos de cada subtema</h2></div>
+        <div class="row">
+          <span class="hint">Generar con</span>
+          <div class="seg" role="group" aria-label="Motor de generación"><button type="button" data-engine="claude">Claude</button><button type="button" data-engine="externo">Gemini o NotebookLM</button></div>
+        </div>
+      </div>
+      <p class="hint" id="engineHint"></p>
+      <div class="row">
+        <button class="btn primary" id="genAll" type="button">Generar todo</button>
+        <button class="btn" id="stopBtn" type="button" hidden>Detener</button>
+        <span class="hint" id="genNote"></span>
+      </div>
+      <div id="genMsg"></div>
+      <div class="mx" id="matrix"></div>
+    </div>
+    <div class="preview" id="preview"></div>
+  </section>
+
+  <!-- PASO 4 -->
+  <section class="panel" id="p4" hidden>
+    <div class="compose">
+      <aside class="card picker" id="picker"></aside>
+      <div class="panel">
+        <div class="row"><div><span class="eyebrow">Paso 4 de 4 · Vista previa</span><h2 style="font-size:22px">Documento integrado</h2></div><span class="spacer"></span><button class="btn" id="dlHtml" type="button">Descargar HTML</button><button class="btn primary" id="dlPdf" type="button">Descargar PDF</button></div>
+        <div class="paper"><div id="composed"></div></div>
+      </div>
+    </div>
+  </section>
+  </main>
+
+  <footer>Complementa genera los materiales con el modelo que usted elija, a partir de los recursos que adjunta. Revise el contenido antes de publicarlo, en especial las cifras, los casos y las referencias marcadas «verificar».</footer>
+</div>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="modal-box">
+    <div class="row"><div><span class="eyebrow" id="mKick"></span><h2 id="mTitle" style="font-size:21px">Generar con Gemini o NotebookLM</h2></div><span class="spacer"></span><button class="btn small" type="button" id="mClose">Cerrar</button></div>
+    <ol class="steps-list">
+      <li>Abra su cuaderno de <b>NotebookLM</b> (con los guiones y referencias como fuentes) o una conversación en <b>Gemini</b>.</li>
+      <li>Copie el prompt y péguelo allí.</li>
+      <li>Copie la respuesta completa y péguela abajo. Complementa le dará el diseño.</li>
+    </ol>
+    <label class="chk"><input type="checkbox" id="mNb"> <span>Mis fuentes ya están cargadas en NotebookLM (el prompt no incluirá los textos, solo las instrucciones)</span></label>
+    <div class="row"><b style="font-size:14px">1 · Prompt</b><span class="spacer"></span><span class="hint" id="mSize"></span><button class="btn small primary" type="button" id="mCopy">Copiar prompt</button></div>
+    <label class="sr" for="mPrompt">Prompt</label><textarea id="mPrompt" readonly></textarea>
+    <b style="font-size:14px">2 · Respuesta de Gemini o NotebookLM</b>
+    <label class="sr" for="mResp">Respuesta</label><textarea id="mResp" placeholder="Pegue aquí la respuesta completa (JSON)…"></textarea>
+    <div id="mMsg"></div>
+    <div class="row"><span class="spacer"></span><button class="btn primary" type="button" id="mImport">Importar respuesta</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+<div class="offscreen force-light" id="offscreen" aria-hidden="true"></div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const arr = x => Array.isArray(x) ? x : [];
+const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+const norm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+const LIB = {
+  mammoth: ['https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js'],
+  pdfjs: ['https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js', 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js'],
+  pdfmake: ['https://cdn.jsdelivr.net/npm/pdfmake@0.2.20/build/pdfmake.min.js', 'https://cdn.jsdelivr.net/npm/pdfmake@0.2.20/build/vfs_fonts.js'],
+  h2c: ['https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'],
+};
+const loaded = {};
+const script = src => new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('No se pudo cargar una biblioteca. Revise su conexión.')); document.head.appendChild(s); });
+function lib(name) { if (!loaded[name]) loaded[name] = LIB[name].reduce((p, src) => p.then(() => script(src)), Promise.resolve()); return loaded[name]; }
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => t.hidden = true, 3400); }
+function note(sel, msg, err) { const el = $(sel); if (!el) return; el.innerHTML = msg ? `<div class="notice${err ? ' err' : ''}">${msg}</div>` : ''; }
+
+/* =============== estado =============== */
+const KINDS = ['ideas', 'documento', 'ejemplos'];
+const KLABEL = { ideas: 'Lo esencial', documento: 'Documento de lectura', ejemplos: 'Ejemplos y casos' };
+const KLET = { ideas: 'a', documento: 'b', ejemplos: 'c' };
+const FIELDS = ['curso', 'leccion', 'subtema', 'tema', 'publico', 'contexto', 'autor', 'adapt'];
+const blank = () => ({ id: uid(), curso: '', leccion: '', subtema: '', tema: '', publico: '', contexto: '', autor: '', adapt: '', engine: 'claude', nb: false, sources: [], results: { ideas: {}, documento: {}, ejemplos: {} }, sel: {}, updatedAt: Date.now() });
+let P = blank(), step = 1, isSample = false, cur = { sid: null, kind: 'ideas' }, running = null, status = {};
+const caps = { sample: null, db: null, downloads: null, uid: null };
+const subtemas = () => P.sources.filter(s => s.kind === 'guion');
+const refsDocs = () => P.sources.filter(s => s.kind === 'general');
+const subLines = () => String(P.subtema || '').split('\n').map(x => x.trim()).filter(Boolean);
+function applySubtemas(onlyIds) { const L = subLines(); subtemas().forEach((s, i) => { if (L[i] && (!onlyIds || onlyIds.includes(s.id))) s.title = L[i]; }); }
+function subNotice() { const L = subLines().length, n = subtemas().length; if (!L || !n || L === n) return ''; return `<div class="notice">En el paso 1 indicó ${L} subtema${L === 1 ? '' : 's'} y aquí hay ${n} guion${n === 1 ? '' : 'es'}. ${L > n ? 'Falta adjuntar algún guion.' : 'Los guiones sin subtema conservan su propio título.'}</div>`; }
+
+/* =============== persistencia =============== */
+const LS = 'complementa:v2';
+const lsAll = () => { try { return JSON.parse(localStorage.getItem(LS) || '{}'); } catch { return {}; } };
+const lsPut = p => { try { const a = lsAll(); a[p.id] = p; localStorage.setItem(LS, JSON.stringify(a)); } catch {} };
+const col = () => caps.db && caps.uid ? caps.db.collection('data/users/' + caps.uid) : null;
+let chain = Promise.resolve();
+function save(parts = {}) {
+  if (isSample) return chain;
+  P.updatedAt = Date.now();
+  chain = chain.then(async () => {
+    const c = col();
+    if (c) { try {
+      const ref = c.doc(P.id); const meta = { v: 2, updatedAt: P.updatedAt, engine: P.engine, nb: P.nb, sel: P.sel, order: P.sources.map(s => ({ id: s.id, name: s.name, kind: s.kind, title: s.title })) };
+      FIELDS.forEach(k => meta[k] = P[k]);
+      await ref.set(meta);
+      for (const s of parts.sources || []) await ref.collection('src').doc(s.id).set({ text: s.text.slice(0, 240000) });
+      if (parts.removeSrc) await ref.collection('src').doc(parts.removeSrc).delete();
+      if (parts.result) { const [k, sid] = parts.result; await ref.collection('res').doc(k + '_' + sid).set({ kind: k, sid, data: P.results[k][sid] }); }
+      refreshList(); return;
+    } catch (e) { if (e && e.code === 'quota_exceeded') note('#genMsg', 'El espacio de guardado está lleno. Elimine lecciones antiguas.', true); } }
+    lsPut(P); refreshList();
+  });
+  return chain;
+}
+async function listProjects() {
+  const out = []; const c = col();
+  if (c) { try { (await c.get()).docs.forEach(d => { const x = d.data(); if (x.v === 2) out.push({ id: d.id, name: x.leccion || x.curso || 'Sin título', at: x.updatedAt || 0 }); }); } catch {} }
+  Object.values(lsAll()).forEach(p => { if (!out.find(o => o.id === p.id)) out.push({ id: p.id, name: p.leccion || p.curso || 'Sin título', at: p.updatedAt || 0 }); });
+  return out.sort((a, b) => b.at - a.at);
+}
+async function refreshList() {
+  const list = await listProjects(); const sel = $('#projSel');
+  sel.innerHTML = '<option value="">Lecciones guardadas…</option>' + list.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');
+  sel.value = !isSample && list.find(p => p.id === P.id) ? P.id : '';
+}
+async function loadProject(id) {
+  const c = col();
+  if (c) { try {
+    const ref = c.doc(id); const d = await ref.get();
+    if (d.exists) {
+      const x = d.data(); const p = blank(); p.id = id; FIELDS.forEach(k => p[k] = x[k] || ''); p.engine = x.engine || 'claude'; p.nb = !!x.nb; p.sel = x.sel || {};
+      const texts = {}; (await ref.collection('src').get()).docs.forEach(s => texts[s.id] = s.data().text || '');
+      p.sources = arr(x.order).map(o => ({ ...o, text: texts[o.id] || '' }));
+      (await ref.collection('res').get()).docs.forEach(r => { const v = r.data(); if (p.results[v.kind]) p.results[v.kind][v.sid] = v.data; });
+      return p;
+    } } catch {} }
+  return lsAll()[id] || null;
+}
+
+/* =============== navegación =============== */
+function go(n) {
+  step = n; ['#p1', '#p2', '#p3', '#p4'].forEach((id, i) => $(id).hidden = i + 1 !== n);
+  renderSteps();
+  if (n === 2) renderSources();
+  if (n === 3) { renderMatrix(); renderPreview(); }
+  if (n === 4) { renderPicker(); renderComposed(); }
+  window.scrollTo({ top: 0 });
+}
+function countDone(k) { return subtemas().filter(s => P.results[k][s.id]).length; }
+function renderSteps() {
+  const n = subtemas().length;
+  $$('.step').forEach(b => b.classList.toggle('on', +b.dataset.step === step));
+  $('#s1').textContent = P.leccion ? P.leccion + (subLines().length ? ` · ${subLines().length} subtema${subLines().length === 1 ? '' : 's'}` : '') : (P.curso || 'Curso, lección y subtema');
+  $('#s2').textContent = P.sources.length ? `${n} subtema${n === 1 ? '' : 's'} · ${refsDocs().length} referencia${refsDocs().length === 1 ? '' : 's'}` : 'Guiones y referencias';
+  $('#s3').textContent = n ? `a ${countDone('ideas')}/${n} · b ${countDone('documento')}/${n} · c ${countDone('ejemplos')}/${n}` : 'a · b · c por subtema';
+  const st = $$('.step');
+  st[0].classList.toggle('done', !!(P.curso && P.leccion));
+  st[1].classList.toggle('done', n > 0);
+  st[2].classList.toggle('done', n > 0 && KINDS.every(k => countDone(k) === n));
+  st[3].classList.toggle('done', false);
+}
+function fillForm() { FIELDS.forEach(k => { const el = $('#f_' + k); el.value = P[k] || ''; el.disabled = isSample; }); }
+function readForm() { if (isSample) return; FIELDS.forEach(k => P[k] = $('#f_' + k).value.trim()); }
+
+/* =============== paso 2: recursos =============== */
+const guessKind = t => /voz en off|gui[oó]n de video|narrador|descripci[oó]n de la imagen/i.test(t) ? 'guion' : 'general';
+function guessTitle(t, name) {
+  const m = t.match(/Subtema\s*[|:]?\s*\n*\s*([^\n|]{4,160})/i) || t.match(/Nombre del video\s*[|:]?\s*\n*\s*([^\n|]{4,160})/i);
+  return (m ? m[1] : name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ')).trim();
+}
+async function readFile(f) {
+  const ext = f.name.split('.').pop().toLowerCase();
+  if (ext === 'txt' || ext === 'md') return f.text();
+  if (ext === 'docx') { await lib('mammoth'); return (await window.mammoth.extractRawText({ arrayBuffer: await f.arrayBuffer() })).value; }
+  if (ext === 'pdf') {
+    await lib('pdfjs'); const pdfjs = window.pdfjsLib; pdfjs.GlobalWorkerOptions.workerSrc = LIB.pdfjs[1];
+    const doc = await pdfjs.getDocument({ data: new Uint8Array(await f.arrayBuffer()) }).promise; let out = '';
+    for (let i = 1; i <= doc.numPages; i++) { const c = await (await doc.getPage(i)).getTextContent(); out += c.items.map(it => it.str + (it.hasEOL ? '\n' : ' ')).join('') + '\n\n'; }
+    return out;
+  }
+  throw new Error('formato no admitido');
+}
+async function addFiles(files) {
+  if (isSample) { toast('Está viendo el ejemplo. Pulse «Nueva lección» para trabajar con sus archivos.'); return; }
+  note('#srcMsg', 'Leyendo archivos…');
+  const added = [], errs = [];
+  for (const f of [...files].sort((a, b) => a.name.localeCompare(b.name, 'es', { numeric: true }))) {
+    try {
+      const text = (await readFile(f)).replace(/\n{3,}/g, '\n\n').trim(); if (!text) throw new Error('no tiene texto legible');
+      const s = { id: uid(), name: f.name, text, kind: guessKind(text), title: guessTitle(text, f.name) }; P.sources.push(s); added.push(s);
+    } catch (e) { errs.push(`${esc(f.name)} (${esc(e.message || 'no se pudo leer')})`); }
+  }
+  note('#srcMsg', errs.length ? 'No se pudieron leer: ' + errs.join(', ') + '. Pruebe con Word o pegue el texto.' : null, !!errs.length);
+  applySubtemas(added.map(a => a.id)); renderSources(); renderSteps(); if (added.length) save({ sources: added });
+}
+function renderSources() {
+  $('#nSub').textContent = subtemas().length; $('#nRef').textContent = refsDocs().length;
+  const list = $('#srcList');
+  if (!P.sources.length) { list.innerHTML = `<div class="empty">Aún no hay recursos. Suba los guiones y el documento de referencias para empezar.</div>`; return; }
+  let n = 0; const dis = isSample ? 'disabled' : '';
+  list.innerHTML = subNotice() + P.sources.map((s, i) => { const g = s.kind === 'guion'; if (g) n++;
+    return `<div class="src${g ? '' : ' ref'}" data-id="${s.id}"><span class="ord">${g ? n : 'REF'}</span>
+      <div class="meta"><label class="sr" for="t_${s.id}">Título</label><input id="t_${s.id}" data-act="title" value="${esc(s.title)}" ${dis}><small>${esc(s.name)}${s.text ? ' · ' + s.text.length.toLocaleString('es') + ' caracteres' : ''}</small></div>
+      <div class="act"><label class="sr" for="k_${s.id}">Tipo</label><select id="k_${s.id}" data-act="kind" ${dis}><option value="guion" ${g ? 'selected' : ''}>Guion (subtema)</option><option value="general" ${g ? '' : 'selected'}>Referencias</option></select>
+        <button class="btn small quiet" data-act="up" type="button" aria-label="Subir" ${i === 0 || isSample ? 'disabled' : ''}>↑</button><button class="btn small quiet" data-act="down" type="button" aria-label="Bajar" ${i === P.sources.length - 1 || isSample ? 'disabled' : ''}>↓</button><button class="btn small quiet" data-act="del" type="button" aria-label="Quitar" ${dis}>✕</button></div></div>`; }).join('');
+}
+$('#srcList').addEventListener('change', e => { const row = e.target.closest('.src'); if (!row) return; const s = P.sources.find(x => x.id === row.dataset.id);
+  if (e.target.dataset.act === 'title') s.title = e.target.value.trim() || s.title;
+  if (e.target.dataset.act === 'kind') { s.kind = e.target.value; if (s.kind === 'guion') applySubtemas([s.id]); }
+  renderSources(); renderSteps(); save(); });
+$('#srcList').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; const i = P.sources.findIndex(x => x.id === b.closest('.src').dataset.id); let rm = null;
+  if (b.dataset.act === 'up' && i > 0) [P.sources[i - 1], P.sources[i]] = [P.sources[i], P.sources[i - 1]];
+  if (b.dataset.act === 'down' && i < P.sources.length - 1) [P.sources[i + 1], P.sources[i]] = [P.sources[i], P.sources[i + 1]];
+  if (b.dataset.act === 'del') { rm = P.sources[i].id; P.sources.splice(i, 1); }
+  renderSources(); renderSteps(); save(rm ? { removeSrc: rm } : {}); });
+const drop = $('#drop'), fileIn = $('#fileIn');
+drop.addEventListener('click', () => fileIn.click());
+drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileIn.click(); } });
+fileIn.addEventListener('change', () => { addFiles(fileIn.files); fileIn.value = ''; });
+['dragenter', 'dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+$('#pasteAdd').addEventListener('click', () => { if (isSample) return; const text = $('#pasteText').value.trim(); if (!text) { note('#srcMsg', 'Pegue el texto antes de agregarlo.', true); return; }
+  const s = { id: uid(), name: 'Texto pegado', text, kind: $('#pasteKind').value, title: $('#pasteTitle').value.trim() || guessTitle(text, 'Texto pegado') };
+  const typed = !!$('#pasteTitle').value.trim(); P.sources.push(s); if (!typed && s.kind === 'guion') applySubtemas([s.id]); $('#pasteText').value = ''; $('#pasteTitle').value = ''; note('#srcMsg', null); renderSources(); renderSteps(); save({ sources: [s] }); });
+
+/* =============== prompts =============== */
+const clip = (t, n) => t.length > n ? t.slice(0, n) + '\n[… recortado por extensión …]' : t;
+function ctx(v, withTexts) {
+  const head = `CONTEXTO
+Curso: ${P.curso || '(no indicado)'}
+Lección: ${P.leccion || '(no indicada)'}
+Objetivo de la lección: ${P.tema || '(no indicado)'}
+Subtema: ${v.title}
+Público lector: ${P.publico || '(no indicado)'}
+Contexto de aplicación: ${P.contexto || '(no indicado)'}`;
+  if (!withTexts) return head + `
+
+FUENTES: usa las fuentes cargadas en este cuaderno: el guion del subtema «${v.title}» y los documentos de referencias de la lección${refsDocs().length ? ' (' + refsDocs().map(r => '«' + r.title + '»').join(', ') + ')' : ''}.`;
+  const refs = refsDocs().map(g => `### ${g.title}\n${g.text}`).join('\n\n');
+  return head + `
+
+DOCUMENTOS DE REFERENCIA DE LA LECCIÓN
+<<<
+${clip(refs || '(no se adjuntaron)', 70000)}
+>>>
+
+GUION DEL SUBTEMA «${v.title}»
+<<<
+${clip(v.text || '(sin texto)', 60000)}
+>>>`;
+}
+const ROLE = `Actúa como profesor experto en educación digital y diseño instruccional. Escribe en español claro y preciso, con tratamiento de "usted".
+Reglas de fuentes: cita en el texto como (Autor, año) solo referencias que aparezcan en las fuentes (incluida la sección de referencias del guion). No inventes autores, cifras, enlaces ni casos. Si incluyes un dato que no proviene de las fuentes, añade " [verificar]" al final de la frase.`;
+const NOVIDEO = `El guion solo sirve para delimitar el alcance del subtema y sus referencias. El texto debe tratar el SUBTEMA como tema de estudio: no menciones "el video", "el guion", "el narrador", "en este video" ni "como vimos".`;
+const JSONONLY = `Responde únicamente con un objeto JSON válido, sin texto antes ni después y sin marcas de cita numeradas.`;
+function pIdeas(v, t) { return `${ROLE}
+
+TAREA: identifica LO ESENCIAL del video para una infografía de un vistazo. Selecciona solo las 3 a 5 ideas más importantes; descarta ejemplos, transiciones y detalles.
+
+${ctx(v, t)}
+
+${JSONONLY}
+{"titulo":"título breve del subtema (máx. 9 palabras)",
+ "pregunta":"pregunta detonadora (tómala del guion si existe; máx. 22 palabras)",
+ "ideas":[{"titulo":"máx. 6 palabras","texto":"máx. 22 palabras"}],
+ "frase_clave":"la idea para llevarse, máx. 16 palabras"}`; }
+function pDoc(v, t) { return `${ROLE}
+${NOVIDEO}
+
+TAREA: escribe un DOCUMENTO DE LECTURA sobre el subtema, al estilo de un capítulo de un manual universitario: introducción con gancho, preguntas guía, secciones que desarrollan el subtema con definiciones, tablas comparativas, ideas clave e implicaciones prácticas para el público. Profundiza más allá del guion usando los documentos de referencia. Extensión: 1 600 a 2 200 palabras.
+
+${ctx(v, t)}
+
+${JSONONLY}
+{"titulo":"título atractivo del capítulo",
+ "entradilla":"2 o 3 frases que enganchen, con un ejemplo cotidiano",
+ "preguntas_guia":["3 o 4 preguntas que el capítulo responde"],
+ "introduccion":"párrafo que anuncia el recorrido del capítulo",
+ "secciones":[{"titulo":"...","bloques":[ bloques en el orden de lectura, de estos tipos:
+   {"tipo":"parrafo","texto":"..."},
+   {"tipo":"lista","items":["..."]},
+   {"tipo":"definicion","termino":"...","texto":"...","ejemplo":"opcional"},
+   {"tipo":"tabla","titulo":"opcional","columnas":["..."],"filas":[["..."]],"fuente":"opcional"},
+   {"tipo":"clave","texto":"idea clave en 1 o 2 frases"},
+   {"tipo":"implicacion","texto":"qué significa en la práctica para el público"},
+   {"tipo":"reflexion","texto":"pregunta o dilema para pensar"},
+   {"tipo":"cita","texto":"...","autor":"Autor (año)"} ]}],
+ "referencias":["referencias en formato APA 7, solo de las fuentes"]}
+Incluye 4 a 6 secciones; en total al menos 2 definiciones, 1 tabla, 3 ideas clave, 2 implicaciones y 1 reflexión. Los párrafos deben ser sustanciales.`; }
+function pEj(v, t) {
+  const d = P.results.documento[v.id]; const secs = d ? arr(d.secciones).map(s => s.titulo) : [];
+  return `${ROLE}
+${NOVIDEO}
+
+TAREA: crea EJEMPLOS Y CASOS DE USO del subtema que le den pertinencia para el público lector, situados en su contexto de aplicación (reparte los ejemplos entre esas disciplinas o sectores). Deben aportar valor complementario: situaciones concretas, reconocibles y con detalle suficiente para discutirlas.
+${secs.length ? `Las secciones del documento de lectura son: ${secs.map(s => '«' + s + '»').join(', ')}. En cada elemento, indica en "seccion" el título EXACTO de la sección donde encaja mejor.` : ''}
+
+${ctx(v, t)}
+
+${JSONONLY}
+{"casos":[ 2 o 3 casos reales documentados: {"titulo":"...","contexto":"dónde y quién","descripcion":"qué se hizo y qué pasó","aprendizaje":"qué enseña sobre el subtema","fuente":"referencia","verificar":true si NO aparece en las fuentes,"seccion":"..."} ],
+ "ejemplos":[ 4 o 5 ejemplos situados: {"titulo":"...","ambito":"disciplina o sector","situacion":"escena concreta","desarrollo":"cómo se aplica el subtema, paso a paso","por_que_importa":"por qué es relevante para el público","seccion":"..."} ],
+ "pruebalo":{"titulo":"Pruébelo","consigna":"ejercicio breve que el lector puede hacer ahora","que_observar":"qué debería notar","seccion":"..."},
+ "mala_practica":{"titulo":"...","texto":"un ejemplo de práctica inadecuada relacionada con el subtema","por_que":"por qué es un error y qué hacer en su lugar","seccion":"..."},
+ "pregunta_discusion":"pregunta abierta para discutir en grupo"}`; }
+const PROMPTS = { ideas: pIdeas, documento: pDoc, ejemplos: pEj };
+const validators = {
+  ideas: d => d && arr(d.ideas).length > 0,
+  documento: d => d && arr(d.secciones).length > 0,
+  ejemplos: d => d && (arr(d.ejemplos).length > 0 || arr(d.casos).length > 0),
+};
+
+/* =============== generación (Claude) =============== */
+const errCopy = c => ({ not_granted: 'No se concedió permiso para usar Claude en esta página.', sampling_disabled: 'Claude no está disponible para esta cuenta.', rate_limited: 'Se alcanzó el límite de uso por ahora. Intente en unos minutos o use Gemini o NotebookLM.', invalid_json: 'La respuesta no llegó en el formato esperado. Pulse «Regenerar».', prompt_too_large: 'Los recursos son demasiado extensos. Recorte el documento de referencias.', refused: 'No se pudo generar este contenido con esos recursos.', session_expired: 'Su sesión expiró. Vuelva a iniciar sesión.' }[c] || 'Hubo un problema de conexión. Intente de nuevo.');
+async function runJobs(jobs) {
+  if (running) return;
+  if (!caps.sample) { note('#genMsg', 'La generación con Claude no está disponible en esta vista. Elija «Gemini o NotebookLM» para trabajar con copiar y pegar.', true); return; }
+  const ctl = new AbortController(); running = ctl; $('#genAll').disabled = true; $('#stopBtn').hidden = false; note('#genMsg', null);
+  jobs.forEach(j => status[j.kind + j.v.id] = 'queue'); renderMatrix();
+  for (const j of jobs) {
+    if (ctl.signal.aborted) break;
+    status[j.kind + j.v.id] = 'run'; renderMatrix();
+    $('#genNote').textContent = `Generando ${KLABEL[j.kind].toLowerCase()} · ${j.v.title}. Puede tardar hasta un minuto.`;
+    try {
+      const data = await caps.sample.json(PROMPTS[j.kind](j.v, true), { signal: ctl.signal, cache: false });
+      if (!validators[j.kind](data)) throw { code: 'invalid_json' };
+      P.results[j.kind][j.v.id] = data; delete status[j.kind + j.v.id];
+      cur = { sid: j.v.id, kind: j.kind }; renderMatrix(); renderPreview(); renderSteps(); save({ result: [j.kind, j.v.id] });
+    } catch (e) {
+      if (e && e.code === 'cancelled') break;
+      status[j.kind + j.v.id] = 'bad'; renderMatrix(); note('#genMsg', errCopy(e && e.code), true);
+      if (['not_granted', 'sampling_disabled', 'rate_limited', 'session_expired'].includes(e && e.code)) break;
+    }
+  }
+  Object.keys(status).forEach(k => { if (status[k] === 'queue' || status[k] === 'run') delete status[k]; });
+  running = null; $('#genAll').disabled = false; $('#stopBtn').hidden = true; $('#genNote').textContent = ''; renderMatrix();
+}
+$('#stopBtn').addEventListener('click', () => running && running.abort());
+$('#genAll').addEventListener('click', () => {
+  if (isSample) { toast('Está viendo el ejemplo. Pulse «Nueva lección» para generar con sus recursos.'); return; }
+  const vs = subtemas(); if (!vs.length) { note('#genMsg', 'Agregue al menos un guion en el paso 2.', true); return; }
+  if (P.engine === 'externo') { const first = KINDS.map(k => vs.map(v => ({ k, v }))).flat().find(x => !P.results[x.k][x.v.id]); if (first) openModal(first.k, first.v.id); else toast('Todos los insumos están listos.'); return; }
+  const jobs = []; KINDS.forEach(kind => vs.forEach(v => { if (!P.results[kind][v.id]) jobs.push({ kind, v }); }));
+  if (!jobs.length) { toast('Todos los insumos están listos. Use «Regenerar» en la vista previa para otra versión.'); return; }
+  runJobs(jobs);
+});
+function generateOne(kind, sid) {
+  if (isSample) { toast('Está viendo el ejemplo. Pulse «Nueva lección» para generar con sus recursos.'); return; }
+  const v = subtemas().find(x => x.id === sid); if (!v) return;
+  if (P.engine === 'externo') return openModal(kind, sid);
+  runJobs([{ kind, v }]);
+}
+
+/* =============== generación externa (Gemini / NotebookLM) =============== */
+let mCtx = null;
+function openModal(kind, sid) {
+  const v = subtemas().find(x => x.id === sid); mCtx = { kind, sid };
+  $('#mKick').textContent = `${KLET[kind]} · ${KLABEL[kind]} · ${v.title}`;
+  $('#mNb').checked = !!P.nb; fillPrompt(); $('#mResp').value = ''; note('#mMsg', kind === 'ejemplos' && !P.results.documento[sid] ? 'Sugerencia: importe primero el documento de lectura (b) para que los ejemplos se ubiquen en sus secciones.' : null);
+  $('#modal').hidden = false; $('#mCopy').focus();
+}
+function fillPrompt() { const v = subtemas().find(x => x.id === mCtx.sid); const p = PROMPTS[mCtx.kind](v, !$('#mNb').checked); $('#mPrompt').value = p; $('#mSize').textContent = Math.round(p.length / 1000) + ' mil caracteres'; }
+$('#mNb').addEventListener('change', () => { P.nb = $('#mNb').checked; fillPrompt(); save(); });
+$('#mClose').addEventListener('click', () => { $('#modal').hidden = true; });
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') $('#modal').hidden = true; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#modal').hidden) $('#modal').hidden = true; });
+$('#mCopy').addEventListener('click', () => {
+  const ta = $('#mPrompt'); const done = () => toast('Prompt copiado. Péguelo en NotebookLM o Gemini.');
+  try { navigator.clipboard.writeText(ta.value).then(done, () => { ta.select(); toast('Seleccioné el prompt: cópielo con Ctrl+C o ⌘C.'); }); } catch { ta.select(); toast('Seleccioné el prompt: cópielo con Ctrl+C o ⌘C.'); }
+});
+function parseLoose(text) {
+  let t = String(text || '').trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '');
+  const a = t.indexOf('{'), b = t.lastIndexOf('}'); if (a < 0 || b < a) throw new Error('no encontré un objeto JSON');
+  t = t.slice(a, b + 1).replace(/\s?\[\d+(?:\s*[,–-]\s*\d+)*\]/g, '').replace(/[“”]/g, m => m === '“' || m === '”' ? '"' : m);
+  try { return JSON.parse(t); } catch { return JSON.parse(t.replace(/,\s*([}\]])/g, '$1')); }
+}
+$('#mImport').addEventListener('click', () => {
+  try {
+    const d = parseLoose($('#mResp').value); if (!validators[mCtx.kind](d)) throw new Error('el JSON no tiene la estructura esperada');
+    P.results[mCtx.kind][mCtx.sid] = d; cur = { sid: mCtx.sid, kind: mCtx.kind }; save({ result: [mCtx.kind, mCtx.sid] });
+    $('#modal').hidden = true; renderMatrix(); renderPreview(); renderSteps(); toast('Respuesta importada.');
+  } catch (e) { note('#mMsg', 'No se pudo importar: ' + esc(e.message) + '. Pida a Gemini o NotebookLM que responda solo con el JSON y vuelva a pegarlo.', true); }
+});
+
+/* =============== paso 3: matriz y vista previa =============== */
+function renderEngine() {
+  $$('[data-engine]').forEach(b => b.classList.toggle('on', b.dataset.engine === P.engine));
+  $('#engineHint').innerHTML = P.engine === 'claude'
+    ? 'Claude genera aquí mismo con su cuenta. El orden es a → b → c: los ejemplos se ubican en las secciones del documento.'
+    : 'Complementa arma el prompt; usted lo ejecuta en <b>NotebookLM</b> o <b>Gemini</b> y pega la respuesta. Así aprovecha sus fuentes y su cuenta de Google, y Complementa se encarga del diseño.';
+  $('#genAll').textContent = P.engine === 'claude' ? 'Generar todo (a → b → c)' : 'Siguiente insumo pendiente';
+}
+$$('[data-engine]').forEach(b => b.addEventListener('click', () => { if (isSample) return; P.engine = b.dataset.engine; save(); renderEngine(); renderMatrix(); }));
+function cellState(kind, sid) { const s = status[kind + sid]; if (s) return s; return P.results[kind][sid] ? 'ok' : 'none'; }
+function renderMatrix() {
+  renderEngine();
+  const vs = subtemas(); const m = $('#matrix');
+  if (!vs.length) { m.innerHTML = `<div class="empty"><b>No hay subtemas.</b><span>Agregue los guiones en el paso 2.</span><button class="btn" type="button" data-go="2">Ir a recursos</button></div>`; return; }
+  if (!cur.sid || !vs.find(v => v.id === cur.sid)) cur.sid = vs[0].id;
+  const pill = st => ({ ok: '<span class="pill ok">Listo</span>', run: '<span class="pill run">Generando</span>', queue: '<span class="pill">En cola</span>', bad: '<span class="pill bad">Error</span>', none: '<span class="pill">Pendiente</span>' }[st]);
+  m.innerHTML = `<div class="mx-row mx-head"><div>Subtema</div>${KINDS.map(k => `<div><span class="k">${KLET[k]}</span>${KLABEL[k]}</div>`).join('')}</div>` +
+    vs.map((v, i) => `<div class="mx-row"><div class="mx-sub"><span>SUBTEMA ${i + 1}</span><b>${esc(v.title)}</b></div>${KINDS.map(k => { const st = cellState(k, v.id); const on = cur.sid === v.id && cur.kind === k;
+      return `<div class="mx-cell${on ? ' sel' : ''}" data-k="${k}" data-s="${v.id}" tabindex="0" role="button" aria-label="${KLABEL[k]} de ${esc(v.title)}"><span class="lbl">${KLET[k]} · ${KLABEL[k]}</span>${pill(st)}<span class="spacer"></span>${st === 'none' || st === 'bad' ? `<button class="btn small" type="button" data-gen="${k}" data-s="${v.id}" ${running ? 'disabled' : ''}>${P.engine === 'claude' ? 'Generar' : 'Prompt'}</button>` : ''}</div>`; }).join('')}</div>`).join('');
+}
+$('#matrix').addEventListener('click', e => {
+  const g = e.target.closest('[data-gen]'); if (g) { generateOne(g.dataset.gen, g.dataset.s); return; }
+  if (e.target.closest('[data-go]')) { go(2); return; }
+  const c = e.target.closest('.mx-cell'); if (c) { cur = { sid: c.dataset.s, kind: c.dataset.k }; renderMatrix(); renderPreview(); }
+});
+$('#matrix').addEventListener('keydown', e => { const c = e.target.closest('.mx-cell'); if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); c.click(); } });
+function renderPreview() {
+  const pv = $('#preview'); const vs = subtemas(); const v = vs.find(x => x.id === cur.sid); if (!v) { pv.innerHTML = ''; return; }
+  const n = vs.indexOf(v) + 1, d = P.results[cur.kind][v.id];
+  const exp = d && caps.downloads ? (cur.kind === 'ideas' ? `<button class="btn small" type="button" data-exp="png">Descargar imagen</button>` : `<button class="btn small" type="button" data-exp="pdf">Descargar PDF</button>`) : '';
+  const head = `<div class="pv-bar"><div><span class="eyebrow">${KLET[cur.kind]} · ${KLABEL[cur.kind]} · Subtema ${n}</span><h3>${esc(v.title)}</h3></div><div class="row">${exp}${d && !isSample ? `<button class="btn small" type="button" data-regen="1">${P.engine === 'claude' ? 'Regenerar' : 'Reemplazar'}</button>` : ''}</div></div>`;
+  if (!d) { pv.innerHTML = head + `<div class="empty"><b>Aún no generado.</b>${cur.kind === 'ejemplos' && !P.results.documento[v.id] ? '<span>Conviene generar primero el documento (b): así cada ejemplo se intercala en la sección que le corresponde.</span>' : ''}<button class="btn primary" type="button" data-regen="1">${P.engine === 'claude' ? 'Generar ahora' : 'Abrir prompt'}</button></div>`; return; }
+  if (cur.kind === 'ideas') pv.innerHTML = head + `<div style="max-width:1000px">${essHTML(d, n, v)}</div>`;
+  if (cur.kind === 'documento') pv.innerHTML = head + `<div class="paper">${chapterHTML(v, n, { ess: false, guia: true, doc: true, ej: false })}</div>`;
+  if (cur.kind === 'ejemplos') pv.innerHTML = head + `<div class="paper"><div class="chap">${ejemplosOnlyHTML(d)}</div></div>`;
+}
+$('#preview').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.regen) generateOne(cur.kind, cur.sid);
+  if (b.dataset.exp === 'png') exportPng(cur.sid);
+  if (b.dataset.exp === 'pdf') exportPdf([cur.sid], cur.kind === 'documento' ? { ess: false, guia: true, doc: true, ej: false, cover: false } : { ess: false, guia: false, doc: false, ej: true, cover: false, onlyEj: true }); });
+
+/* =============== render de contenidos =============== */
+function essHTML(d, n, v, extra = '') {
+  return `<article class="ess ${extra}"><div class="ess-top"><div class="num">${String(n).padStart(2, '0')}</div><span class="eyebrow">Lo esencial · ${esc(P.leccion || P.curso)}</span><h3>${esc(d.titulo || v.title)}</h3></div>
+    ${d.pregunta ? `<div class="ess-q">${esc(d.pregunta)}</div>` : ''}
+    <div class="ess-ideas">${arr(d.ideas).map((x, i) => `<div class="ess-idea"><i>${i + 1}</i><b>${esc(x.titulo)}</b><p>${esc(x.texto)}</p></div>`).join('')}</div>
+    ${d.frase_clave ? `<div class="ess-key"><span class="eyebrow">Para llevarse</span>${esc(d.frase_clave)}</div>` : ''}</article>`;
+}
+function blockHTML(b) {
+  switch (b.tipo) {
+    case 'lista': return `<ul>${arr(b.items).map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+    case 'definicion': return `<div class="co def"><span class="t">Definición</span><h5>${esc(b.termino)}</h5><p>${esc(b.texto)}</p>${b.ejemplo ? `<p><i>Ejemplo:</i> ${esc(b.ejemplo)}</p>` : ''}</div>`;
+    case 'tabla': return `<div class="tbl"><table>${b.titulo ? `<caption>${esc(b.titulo)}${b.fuente ? ' · Fuente: ' + esc(b.fuente) : ''}</caption>` : b.fuente ? `<caption>Fuente: ${esc(b.fuente)}</caption>` : ''}<thead><tr>${arr(b.columnas).map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${arr(b.filas).map(r => `<tr>${arr(r).map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+    case 'clave': return `<div class="co key"><span class="t">Idea clave</span><p>${esc(b.texto)}</p></div>`;
+    case 'implicacion': return `<div class="co impl"><span class="t">Implicación práctica</span><p>${esc(b.texto)}</p></div>`;
+    case 'reflexion': return `<div class="co refl"><span class="t">Para reflexionar</span><p>${esc(b.texto)}</p></div>`;
+    case 'cita': return `<blockquote class="quote" style="margin:0">${esc(b.texto)}${b.autor ? `<small>${esc(b.autor)}</small>` : ''}</blockquote>`;
+    default: return `<p>${esc(b.texto)}</p>`;
+  }
+}
+const exHTML = e => `<div class="co ex"><span class="t">Ejemplo · ${esc(e.ambito || '')}</span><h5>${esc(e.titulo)}</h5><p>${esc(e.situacion)}</p>${e.desarrollo ? `<p>${esc(e.desarrollo)}</p>` : ''}${e.por_que_importa ? `<p><b>Por qué importa:</b> ${esc(e.por_que_importa)}</p>` : ''}</div>`;
+const caseHTML = c => `<div class="co case"><span class="t">Caso real${c.contexto ? ' · ' + esc(c.contexto) : ''}</span><h5>${esc(c.titulo)}</h5><p>${esc(c.descripcion)}</p>${c.aprendizaje ? `<p><b>Qué enseña:</b> ${esc(c.aprendizaje)}</p>` : ''}${c.fuente ? `<p class="refs" style="color:var(--muted)">Fuente: ${esc(c.fuente)}${c.verificar ? ' <span class="warn">· verificar</span>' : ''}</p>` : ''}</div>`;
+const tryHTML = t => `<div class="co try"><span class="t">Pruébelo</span><h5>${esc(t.titulo && t.titulo !== 'Pruébelo' ? t.titulo : 'Ejercicio breve')}</h5><p>${esc(t.consigna)}</p>${t.que_observar ? `<p><b>Qué observar:</b> ${esc(t.que_observar)}</p>` : ''}</div>`;
+const badHTML = b => `<div class="co bad"><span class="t">Un ejemplo de mala práctica</span><h5>${esc(b.titulo)}</h5><p>${esc(b.texto)}</p>${b.por_que ? `<p><b>Por qué y qué hacer:</b> ${esc(b.por_que)}</p>` : ''}</div>`;
+function ejemplosOnlyHTML(d) {
+  return `<div class="ch-open"><span class="kick">Ejemplos y casos de uso</span><h2 class="ch-title" style="font-size:30px">${esc(subtemas().find(s => s.id === cur.sid)?.title || '')}</h2></div>
+    ${arr(d.ejemplos).map(exHTML).join('')}${arr(d.casos).map(caseHTML).join('')}${d.pruebalo ? tryHTML(d.pruebalo) : ''}${d.mala_practica ? badHTML(d.mala_practica) : ''}${d.pregunta_discusion ? `<div class="co refl"><span class="t">Para discutir</span><p>${esc(d.pregunta_discusion)}</p></div>` : ''}`;
+}
+/* selección por capítulo */
+function selFor(sid) {
+  const d = P.results.ejemplos[sid] || {}; const s = P.sel[sid] || {};
+  return { on: s.on !== false, ess: s.ess !== false, guia: s.guia !== false, doc: s.doc !== false,
+    ej: arr(d.ejemplos).map((_, i) => !(s.ejx || []).includes(i)), ca: arr(d.casos).map((_, i) => !(s.cax || []).includes(i)),
+    try: s.try !== false, bad: s.bad !== false, disc: s.disc !== false };
+}
+/* reparte ejemplos/casos según la sección indicada */
+function placeItems(sid, sel, secTitles) {
+  const d = P.results.ejemplos[sid] || {}; const bySec = {}; const rest = [];
+  const find = t => { const n = norm(t); if (!n) return -1; let i = secTitles.findIndex(s => norm(s) === n); if (i < 0) i = secTitles.findIndex(s => norm(s).includes(n) || n.includes(norm(s))); return i; };
+  const put = (it, html) => { const i = find(it.seccion); if (i >= 0) (bySec[i] = bySec[i] || []).push(html); else rest.push(html); };
+  arr(d.ejemplos).forEach((e, i) => sel.ej[i] && put(e, { t: 'ex', d: e }));
+  arr(d.casos).forEach((c, i) => sel.ca[i] && put(c, { t: 'case', d: c }));
+  if (d.pruebalo && sel.try) put(d.pruebalo, { t: 'try', d: d.pruebalo });
+  if (d.mala_practica && sel.bad) put(d.mala_practica, { t: 'bad', d: d.mala_practica });
+  return { bySec, rest };
+}
+const itemHTML = it => ({ ex: exHTML, case: caseHTML, try: tryHTML, bad: badHTML })[it.t](it.d);
+function chapterHTML(v, n, o) {
+  const sel = { ...selFor(v.id), ...o.force }; const doc = P.results.documento[v.id]; const ideas = P.results.ideas[v.id]; const ej = P.results.ejemplos[v.id];
+  const useEss = o.ess && sel.ess && ideas, useGuia = o.guia && sel.guia && doc, useDoc = o.doc && sel.doc && doc, useEj = o.ej && ej;
+  const secs = useDoc ? arr(doc.secciones) : [];
+  const placed = useEj ? placeItems(v.id, sel, secs.map(s => s.titulo)) : { bySec: {}, rest: [] };
+  const by = [P.autor && 'Autoría: ' + P.autor, P.adapt && 'Adaptación: ' + P.adapt].filter(Boolean).join(' · ');
+  let h = `<div class="chap"><div class="ch-open"><span class="kick">${esc([P.curso, 'Capítulo ' + n].filter(Boolean).join(' · '))}</span><h2 class="ch-title">${esc(doc?.titulo || ideas?.titulo || v.title)}</h2>${doc?.titulo && doc.titulo !== v.title ? `<span class="by">Subtema: ${esc(v.title)}</span>` : ''}${by ? `<span class="by">${esc(by)}</span>` : ''}</div>`;
+  if (doc?.entradilla && (useGuia || useDoc)) h += `<p class="lede">${esc(doc.entradilla)}</p>`;
+  if (useGuia) h += `<div class="guide"><span class="t">Preguntas que guían el capítulo</span><ol>${arr(doc.preguntas_guia).map(q => `<li>${esc(q)}</li>`).join('')}</ol></div>${doc.introduccion ? `<p>${esc(doc.introduccion)}</p>` : ''}`;
+  if (useEss) h += essHTML(ideas, n, v);
+  secs.forEach((s, i) => { h += `<h3>${esc(s.titulo)}</h3>` + arr(s.bloques).map(blockHTML).join('') + (placed.bySec[i] || []).map(itemHTML).join(''); });
+  if (placed.rest.length) h += `<h3>${useDoc ? 'Más ejemplos y casos' : 'Ejemplos y casos de uso'}</h3>` + placed.rest.map(itemHTML).join('');
+  if (useEj && sel.disc && ej.pregunta_discusion) h += `<div class="co refl"><span class="t">Para discutir</span><p>${esc(ej.pregunta_discusion)}</p></div>`;
+  const refs = chapterRefs(v.id, useDoc || useGuia, useEj, sel);
+  if (refs.length) h += `<h4>Referencias</h4><div class="refs"><ul>${refs.map(r => `<li>${esc(r)}</li>`).join('')}</ul></div>`;
+  return h + '</div>';
+}
+function chapterRefs(sid, withDoc, withEj, sel) {
+  const out = []; const seen = new Set(); const add = r => { const k = norm(r).slice(0, 60); if (r && !seen.has(k)) { seen.add(k); out.push(r); } };
+  if (withDoc) arr(P.results.documento[sid]?.referencias).forEach(add);
+  if (withEj) arr(P.results.ejemplos[sid]?.casos).forEach((c, i) => sel.ca[i] && c.fuente && !c.verificar && add(c.fuente));
+  return out.sort((a, b) => a.localeCompare(b, 'es'));
+}
+
+/* =============== paso 4: integrar =============== */
+function readyChapters() { return subtemas().filter(v => KINDS.some(k => P.results[k][v.id])); }
+function renderPicker() {
+  const vs = readyChapters(); const pk = $('#picker'); const dis = isSample ? '' : '';
+  if (!vs.length) { pk.innerHTML = `<div><span class="eyebrow">Elementos</span><h2 style="font-size:19px">Nada que integrar todavía</h2></div><p class="hint">Genere al menos un insumo en el paso 3.</p><button class="btn" type="button" data-go="3">Ir a insumos</button>`; return; }
+  pk.innerHTML = `<div><span class="eyebrow">Elementos</span><h2 style="font-size:19px">¿Qué incluye el documento?</h2></div>
+    <label class="chk"><input type="checkbox" data-g="cover" ${P.sel._cover !== false ? 'checked' : ''}> <span>Portada e índice</span></label>` +
+    vs.map((v, i) => { const s = selFor(v.id); const d = P.results; const ej = d.ejemplos[v.id];
+      const c = (key, label, checked, has, tag) => has ? `<label class="chk"><input type="checkbox" data-s="${v.id}" data-k="${key}" ${checked ? 'checked' : ''}> <span>${tag ? `<em>${tag}</em>` : ''}${esc(label)}</span></label>` : '';
+      return `<details ${i < 3 ? 'open' : ''}><summary><input type="checkbox" data-s="${v.id}" data-k="on" ${s.on ? 'checked' : ''} aria-label="Incluir capítulo ${i + 1}"> <span>${i + 1}. ${esc(v.title)}</span></summary><div class="opts">
+        <span class="optgroup">Lectura</span>
+        ${c('guia', 'Entradilla y preguntas guía', s.guia, d.documento[v.id])}
+        ${c('ess', 'Lo esencial (infografía)', s.ess, d.ideas[v.id], 'a')}
+        ${c('doc', 'Documento de lectura', s.doc, d.documento[v.id], 'b')}
+        ${ej ? '<span class="optgroup">Ejemplos y casos (c)</span>' : ''}
+        ${arr(ej?.ejemplos).map((e, j) => c('ej:' + j, e.titulo, s.ej[j], true, 'Ejemplo')).join('')}
+        ${arr(ej?.casos).map((e, j) => c('ca:' + j, e.titulo, s.ca[j], true, 'Caso')).join('')}
+        ${c('try', ej?.pruebalo?.consigna ? 'Pruébelo' : '', s.try, ej?.pruebalo, '')}
+        ${c('bad', 'Mala práctica', s.bad, ej?.mala_practica, '')}
+        ${c('disc', 'Pregunta para discutir', s.disc, ej?.pregunta_discusion, '')}
+        ${!KINDS.every(k => d[k][v.id]) ? `<span class="hint" style="font-size:12.5px">Faltan insumos: ${KINDS.filter(k => !d[k][v.id]).map(k => KLET[k]).join(', ')}</span>` : ''}
+      </div></details>`; }).join('') +
+    `<p class="hint" style="font-size:13px">Los ejemplos y casos se intercalan en la sección del documento donde mejor encajan.</p>`;
+}
+$('#picker').addEventListener('change', e => {
+  const t = e.target; if (t.dataset.g === 'cover') { P.sel._cover = t.checked; save(); renderComposed(); return; }
+  const sid = t.dataset.s, k = t.dataset.k; if (!sid) return; const s = P.sel[sid] = P.sel[sid] || {};
+  if (k.startsWith('ej:') || k.startsWith('ca:')) { const [kk, i] = k.split(':'); const key = kk + 'x'; s[key] = s[key] || []; const idx = +i; s[key] = t.checked ? s[key].filter(x => x !== idx) : [...new Set([...s[key], idx])]; }
+  else s[k] = t.checked;
+  save(); renderComposed();
+});
+$('#picker').addEventListener('click', e => { if (e.target.closest('[data-go]')) go(3); });
+function composedChapters() { return readyChapters().filter(v => selFor(v.id).on); }
+function composedHTML() {
+  const vs = composedChapters(); const all = subtemas();
+  if (!vs.length) return `<div class="empty">Seleccione al menos un capítulo.</div>`;
+  let h = '';
+  if (P.sel._cover !== false) {
+    const by = [P.autor && 'Autoría: ' + P.autor, P.adapt && 'Adaptación: ' + P.adapt].filter(Boolean).join(' · ');
+    h += `<div class="doc-cover"><span class="kick">${esc(P.curso)}</span><h1>${esc(P.leccion || 'Material de lectura')}</h1>${P.tema ? `<p class="lede" style="font-family:var(--f-read)">${esc(P.tema)}</p>` : ''}${by ? `<span class="hint">${esc(by)}</span>` : ''}
+      <div class="toc"><span class="eyebrow">Contenido</span>${vs.map(v => `<div><span>${all.indexOf(v) + 1}</span>${esc(P.results.documento[v.id]?.titulo || v.title)}</div>`).join('')}</div></div>`;
+  }
+  h += vs.map((v, i) => (i ? '<div class="ch-sep"></div>' : '') + chapterHTML(v, all.indexOf(v) + 1, { ess: true, guia: true, doc: true, ej: true })).join('');
+  return h;
+}
+function renderComposed() { $('#composed').innerHTML = composedHTML(); }
+$('#dlHtml').addEventListener('click', async () => {
+  if (!caps.downloads) { toast('Las descargas no están disponibles en esta vista.'); return; }
+  const css = document.querySelector('style').textContent;
+  const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(P.leccion || 'Documento')}</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@500&display=swap"><style>${css}
+body{background:#EEF2EF;padding:24px 12px}.paper{box-shadow:none}@media print{body{background:#fff;padding:0}.paper{border:0;padding:0;max-width:none}.co,.ess,.tbl,.guide{break-inside:avoid}.ch-sep{break-after:page;height:0;margin:0}}</style></head><body class="force-light"><div class="paper">${composedHTML()}</div></body></html>`;
+  offer(fileBase() + '.html', html);
+});
+$('#dlPdf').addEventListener('click', () => { const ids = composedChapters().map(v => v.id); if (!ids.length) { toast('Seleccione al menos un capítulo.'); return; } exportPdf(ids, { ess: true, guia: true, doc: true, ej: true, cover: P.sel._cover !== false }); });
+
+/* =============== exportaciones =============== */
+const slug = s => (s || 'material').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w]+/g, '_').replace(/^_|_$/g, '').slice(0, 70);
+const fileBase = () => slug(P.leccion || P.curso || 'Documento');
+async function offer(filename, data) {
+  if (!caps.downloads) { toast('Las descargas no están disponibles en esta vista.'); return; }
+  try { await caps.downloads.save({ filename, data }); } catch (e) { if (e && e.code !== 'declined') toast(e.code === 'rate_limited' ? 'Ya hay una descarga esperando su confirmación.' : 'No se pudo preparar la descarga.'); }
+}
+async function essImage(sid) {
+  await lib('h2c'); const vs = subtemas(); const v = vs.find(x => x.id === sid); const host = $('#offscreen');
+  host.innerHTML = essHTML(P.results.ideas[sid], vs.indexOf(v) + 1, v, 'export');
+  await (document.fonts?.ready || Promise.resolve());
+  const canvas = await window.html2canvas(host.firstElementChild, { scale: 2, backgroundColor: '#FFFFFF', useCORS: true, logging: false });
+  host.innerHTML = ''; return canvas;
+}
+async function exportPng(sid) {
+  try { toast('Preparando la imagen…'); const c = await essImage(sid); const blob = await new Promise(r => c.toBlob(r, 'image/png'));
+    const v = subtemas().find(x => x.id === sid); offer(`Lo_esencial_${slug(v.title)}.png`, blob); } catch (e) { toast('No se pudo crear la imagen: ' + e.message); }
+}
+/* ---- PDF con pdfmake ---- */
+const C = { ink: '#14302A', pine: '#1F5C4D', pineSoft: '#E2EEE9', gold: '#B87F00', goldSoft: '#FBF0D4', sky: '#245E8F', skySoft: '#E3EEF7', risk: '#B4462F', riskSoft: '#F8E6E1', muted: '#566A61', line: '#D3DDD8', sunk: '#F3F6F4' };
+function pdfBox(label, accent, fill, body, opts = {}) {
+  return { table: { widths: ['*'], body: [[{ stack: [{ text: label.toUpperCase(), fontSize: 7.5, bold: true, color: accent, characterSpacing: 1, margin: [0, 0, 0, 4] }, ...body], fillColor: fill, margin: [10, 8, 10, 9] }]] },
+    layout: { hLineWidth: () => opts.border ? 0.6 : 0, vLineWidth: i => i === 0 ? 3 : (opts.border ? 0.6 : 0), vLineColor: i => i === 0 ? accent : C.line, hLineColor: () => C.line, paddingLeft: () => 0, paddingRight: () => 0, paddingTop: () => 0, paddingBottom: () => 0 },
+    margin: [0, 6, 0, 10], unbreakable: JSON.stringify(body).length < 1400 };
+}
+const T = (t, o = {}) => ({ text: Array.isArray(t) ? t.map(x => typeof x === 'string' ? x : { ...x, text: String(x.text ?? '') }) : String(t ?? ''), ...o });
+function pdfBlock(b) {
+  switch (b.tipo) {
+    case 'lista': return { ul: arr(b.items).map(x => T(x)), margin: [0, 0, 0, 8] };
+    case 'definicion': return pdfBox('Definición', C.pine, C.pineSoft, [T(b.termino, { bold: true, fontSize: 11.5, margin: [0, 0, 0, 3] }), T(b.texto), b.ejemplo ? T([{ text: 'Ejemplo: ', italics: true }, b.ejemplo], { margin: [0, 4, 0, 0] }) : null].filter(Boolean));
+    case 'clave': return pdfBox('Idea clave', C.gold, C.goldSoft, [T(b.texto, { bold: true, fontSize: 11.5 })]);
+    case 'implicacion': return pdfBox('Implicación práctica', C.sky, C.skySoft, [T(b.texto)]);
+    case 'reflexion': return pdfBox('Para reflexionar', C.muted, C.sunk, [T(b.texto, { italics: true })]);
+    case 'cita': return { stack: [T(b.texto, { italics: true, color: C.pine }), b.autor ? T(b.autor, { fontSize: 9, color: C.muted, margin: [0, 2, 0, 0] }) : ''], margin: [14, 4, 14, 10] };
+    case 'tabla': { const cols = arr(b.columnas); if (!cols.length) return ''; return { stack: [
+      { table: { headerRows: 1, widths: cols.map(() => '*'), body: [cols.map(c => T(c, { bold: true, color: '#FFFFFF', fillColor: C.ink, fontSize: 9 })), ...arr(b.filas).map((r, i) => cols.map((_, j) => T(arr(r)[j] ?? '', { fontSize: 9, fillColor: i % 2 ? C.sunk : null })))] },
+        layout: { hLineWidth: () => 0.5, vLineWidth: () => 0, hLineColor: () => C.line, paddingTop: () => 5, paddingBottom: () => 5, paddingLeft: () => 6, paddingRight: () => 6 } },
+      (b.titulo || b.fuente) ? T([b.titulo || '', b.fuente ? (b.titulo ? ' · ' : '') + 'Fuente: ' + b.fuente : ''].join(''), { fontSize: 8, color: C.muted, margin: [0, 3, 0, 0] }) : ''], margin: [0, 4, 0, 12] }; }
+    default: return T(b.texto, { margin: [0, 0, 0, 8], alignment: 'justify' });
+  }
+}
+const pdfItem = it => {
+  const d = it.d;
+  if (it.t === 'ex') return pdfBox('Ejemplo · ' + (d.ambito || ''), C.pine, '#FFFFFF', [T(d.titulo, { bold: true, fontSize: 11.5, margin: [0, 0, 0, 3] }), T(d.situacion), d.desarrollo ? T(d.desarrollo, { margin: [0, 4, 0, 0] }) : '', d.por_que_importa ? T([{ text: 'Por qué importa: ', bold: true }, d.por_que_importa], { margin: [0, 4, 0, 0] }) : ''], { border: true });
+  if (it.t === 'case') return pdfBox('Caso real' + (d.contexto ? ' · ' + d.contexto : ''), C.ink, '#FFFFFF', [T(d.titulo, { bold: true, fontSize: 11.5, margin: [0, 0, 0, 3] }), T(d.descripcion), d.aprendizaje ? T([{ text: 'Qué enseña: ', bold: true }, d.aprendizaje], { margin: [0, 4, 0, 0] }) : '', d.fuente ? T('Fuente: ' + d.fuente + (d.verificar ? '  · VERIFICAR' : ''), { fontSize: 8.5, color: d.verificar ? C.risk : C.muted, margin: [0, 4, 0, 0] }) : ''], { border: true });
+  if (it.t === 'try') return pdfBox('Pruébelo', C.gold, '#FFFFFF', [T(d.titulo && d.titulo !== 'Pruébelo' ? d.titulo : 'Ejercicio breve', { bold: true, fontSize: 11.5, margin: [0, 0, 0, 3] }), T(d.consigna), d.que_observar ? T([{ text: 'Qué observar: ', bold: true }, d.que_observar], { margin: [0, 4, 0, 0] }) : ''], { border: true });
+  return pdfBox('Un ejemplo de mala práctica', C.risk, C.riskSoft, [T(d.titulo, { bold: true, fontSize: 11.5, margin: [0, 0, 0, 3] }), T(d.texto), d.por_que ? T([{ text: 'Por qué y qué hacer: ', bold: true }, d.por_que], { margin: [0, 4, 0, 0] }) : '']);
+};
+async function exportPdf(ids, o) {
+  try {
+    toast('Preparando el PDF…'); await lib('pdfmake'); const all = subtemas(); const content = [];
+    const by = [P.autor && 'Autoría: ' + P.autor, P.adapt && 'Adaptación: ' + P.adapt].filter(Boolean).join('   ·   ');
+    if (o.cover) {
+      content.push({ canvas: [{ type: 'rect', x: 0, y: 0, w: 612, h: 300, color: C.ink }], absolutePosition: { x: 0, y: 0 } });
+      content.push(T((P.curso || '').toUpperCase(), { color: '#EDB63A', bold: true, fontSize: 9, characterSpacing: 1.5, margin: [0, 40, 0, 10] }));
+      content.push(T(P.leccion || 'Material de lectura', { color: '#FFFFFF', bold: true, fontSize: 30, lineHeight: 1.1, margin: [0, 0, 0, 120] }));
+      if (P.tema) content.push(T(P.tema, { fontSize: 13, italics: true, color: C.pine, margin: [0, 0, 0, 14] }));
+      if (by) content.push(T(by, { fontSize: 10, color: C.muted, margin: [0, 0, 0, 30] }));
+      if (ids.length > 1) content.push({ toc: { title: T('Contenido', { bold: true, fontSize: 13, color: C.ink, margin: [0, 0, 0, 8] }), numberStyle: { color: C.muted } } });
+    }
+    for (let ci = 0; ci < ids.length; ci++) {
+      const sid = ids[ci]; const v = all.find(x => x.id === sid); const n = all.indexOf(v) + 1;
+      const sel = selFor(sid); const doc = P.results.documento[sid], ideas = P.results.ideas[sid], ej = P.results.ejemplos[sid];
+      const useDoc = o.doc && sel.doc && doc, useGuia = o.guia && sel.guia && doc, useEss = o.ess && sel.ess && ideas, useEj = o.ej && ej;
+      const first = content.length === 0;
+      content.push({ table: { widths: ['*'], body: [[{ stack: [T([P.curso, 'Capítulo ' + n].filter(Boolean).join(' · ').toUpperCase(), { color: '#EDB63A', fontSize: 8, bold: true, characterSpacing: 1.2, margin: [0, 0, 0, 6] }), T(o.onlyEj ? 'Ejemplos y casos: ' + v.title : (doc?.titulo || v.title), { color: '#FFFFFF', fontSize: 21, bold: true, lineHeight: 1.1, tocItem: ids.length > 1 && o.cover, tocMargin: [0, 3, 0, 3] }), by ? T(by, { color: '#C9D4CF', fontSize: 8.5, margin: [0, 6, 0, 0] }) : ''], fillColor: C.ink, margin: [16, 16, 16, 16] }]] }, layout: 'noBorders', margin: [0, 0, 0, 14], pageBreak: first ? undefined : 'before' });
+      if (doc?.entradilla && (useGuia || useDoc)) content.push(T(doc.entradilla, { fontSize: 12.5, color: C.ink, lineHeight: 1.4, margin: [0, 0, 0, 10] }));
+      if (useGuia) { content.push(pdfBox('Preguntas que guían el capítulo', C.pine, C.sunk, [{ ol: arr(doc.preguntas_guia).map(q => T(q)) }])); if (doc.introduccion) content.push(T(doc.introduccion, { margin: [0, 0, 0, 8], alignment: 'justify' })); }
+      if (useEss) { const c = await essImage(sid); content.push({ image: c.toDataURL('image/png'), width: 492, margin: [0, 4, 0, 14] }); }
+      const secs = useDoc ? arr(doc.secciones) : []; const placed = useEj ? placeItems(sid, o.onlyEj ? { ...sel, ej: sel.ej.map(() => true), ca: sel.ca.map(() => true), try: true, bad: true } : sel, secs.map(s => s.titulo)) : { bySec: {}, rest: [] };
+      secs.forEach((s, i) => { content.push(T(s.titulo, { style: 'h2', headlineLevel: 1 })); arr(s.bloques).forEach(b => content.push(pdfBlock(b))); (placed.bySec[i] || []).forEach(it => content.push(pdfItem(it))); });
+      if (placed.rest.length) { if (!o.onlyEj) content.push(T(useDoc ? 'Más ejemplos y casos' : 'Ejemplos y casos de uso', { style: 'h2' })); placed.rest.forEach(it => content.push(pdfItem(it))); }
+      if (useEj && (sel.disc || o.onlyEj) && ej.pregunta_discusion) content.push(pdfBox('Para discutir', C.muted, C.sunk, [T(ej.pregunta_discusion, { italics: true })]));
+      const refs = chapterRefs(sid, useDoc || useGuia, useEj, o.onlyEj ? { ...sel, ca: sel.ca.map(() => true) } : sel);
+      if (refs.length) { content.push(T('Referencias', { style: 'h3' })); refs.forEach(r => content.push(T(r, { fontSize: 8.5, color: C.muted, margin: [0, 0, 0, 4] }))); }
+    }
+    const title = P.leccion || 'Documento';
+    const dd = {
+      pageSize: 'LETTER', pageMargins: [60, 62, 60, 58], info: { title, author: P.autor || '' },
+      defaultStyle: { font: 'Roboto', fontSize: 10.5, lineHeight: 1.35, color: C.ink },
+      styles: { h2: { fontSize: 15, bold: true, color: C.pine, margin: [0, 14, 0, 6] }, h3: { fontSize: 11.5, bold: true, color: C.ink, margin: [0, 14, 0, 6] } },
+      header: (p) => p === 1 ? null : { columns: [T(title, { fontSize: 8, color: C.muted }), T(P.curso || '', { fontSize: 8, color: C.muted, alignment: 'right' })], margin: [60, 28, 60, 0] },
+      footer: (p, total) => ({ columns: [T('Material complementario · revise y valide antes de publicar', { fontSize: 7.5, color: C.muted }), T(p + ' / ' + total, { fontSize: 8, color: C.muted, alignment: 'right' })], margin: [60, 20, 60, 0] }),
+      content,
+      pageBreakBefore: (node, following) => node.headlineLevel === 1 && following.length < 3,
+    };
+    const blob = await new Promise((res, rej) => { try { window.pdfMake.createPdf(dd).getBlob(res); } catch (e) { rej(e); } });
+    const name = ids.length === 1 && !o.cover ? `${o.onlyEj ? 'Ejemplos' : 'Documento'}_${slug(all.find(x => x.id === ids[0]).title)}.pdf` : fileBase() + '.pdf';
+    offer(name, blob);
+  } catch (e) { toast('No se pudo crear el PDF: ' + (e.message || 'error')); }
+}
+
+/* =============== eventos generales =============== */
+$$('.step').forEach(b => b.addEventListener('click', () => { if (step === 1) { readForm(); save(); } go(+b.dataset.step); }));
+$('#to2').addEventListener('click', () => { readForm(); if (!isSample && (!P.curso || !P.leccion)) { toast('Indique al menos el curso y la lección.'); (!P.curso ? $('#f_curso') : $('#f_leccion')).focus(); return; } save(); go(2); });
+$('#back1').addEventListener('click', () => go(1));
+$('#to3').addEventListener('click', () => { if (!subtemas().length) { note('#srcMsg', 'Agregue al menos un guion. Si ya subió el archivo, cambie su tipo a «Guion (subtema)».', true); return; } go(3); });
+FIELDS.forEach(k => $('#f_' + k).addEventListener('change', () => { readForm(); if (k === 'subtema') applySubtemas(); renderSteps(); save(); }));
+function openSample() { if (running) return; isSample = true; P = JSON.parse(JSON.stringify(SAMPLE)); status = {}; cur = { sid: 's1', kind: 'ideas' }; fillForm(); refreshList(); go(4); toast('Está viendo un ejemplo. Pulse «Nueva lección» para usar sus recursos.'); }
+$('#sampleBtn').addEventListener('click', openSample);
+document.addEventListener('click', e => { if (e.target.closest('[data-sample]')) openSample(); });
+$('#newBtn').addEventListener('click', () => { if (running) return; isSample = false; P = blank(); status = {}; cur = { sid: null, kind: 'ideas' }; fillForm(); note('#genMsg', null); refreshList(); go(1); });
+$('#projSel').addEventListener('change', async e => { const id = e.target.value; if (!id || running) return; const p = await loadProject(id); if (!p) { toast('No se pudo abrir esa lección.'); return; }
+  isSample = false; P = p; status = {}; cur = { sid: null, kind: 'ideas' }; fillForm(); go(KINDS.some(k => Object.keys(P.results[k]).length) ? 3 : P.sources.length ? 2 : 1); });
+
+/* =============== ejemplo precargado =============== */
+const SAMPLE = {"id":"ejemplo","curso":"AI Technical for Pedagogical Leadership","leccion":"Lección 1. Hacia el diseño de experiencias formativas con IA","subtema":"1.1 Oportunidades y desafíos para enseñar en la era de la IA\n1.2 IA al servicio del desarrollo de competencias del siglo XXI","tema":"Valorar la IA como un medio para soportar la pedagogía, con el fin de potenciar el desarrollo de talento y el acceso igualitario al conocimiento.","publico":"Docentes universitarios de distintas facultades","contexto":"Ingeniería, ciencias de la salud, derecho y educación en Guatemala","autor":"Equipo GES AI Lab","adapt":"","engine":"claude","nb":false,"sel":{},"updatedAt":0,
+"sources":[{"id":"s1","name":"1.1 Oportunidades y desafíos.docx","kind":"guion","title":"1.1 Oportunidades y desafíos para enseñar en la era de la IA","text":""},{"id":"s2","name":"1.2 Competencias del siglo XXI.docx","kind":"guion","title":"1.2 IA al servicio del desarrollo de competencias del siglo XXI","text":""},{"id":"r1","name":"Referencias Lección 1.docx","kind":"general","title":"Referencias de la lección","text":""}],
+"results":{
+"ideas":{
+"s1":{"titulo":"Enseñar en la era de la IA","pregunta":"¿Qué significa enseñar cuando la IA puede hacer en segundos tareas que antes tomaban horas?","ideas":[{"titulo":"El cambio es pedagógico","texto":"La pregunta no es qué puede hacer la IA, sino cómo enseñamos y qué deben aprender los estudiantes."},{"titulo":"Más tiempo para acompañar","texto":"Personaliza recursos, agiliza la retroalimentación y libera tiempo docente para el seguimiento."},{"titulo":"Cuatro riesgos a vigilar","texto":"Respuestas inventadas, privacidad de datos, sesgos y dependencia que debilita el análisis propio."},{"titulo":"Roles que se amplían","texto":"El docente diseña y guía; el estudiante pregunta, contrasta y construye conocimiento."}],"frase_clave":"La IA apoya; el docente decide."},
+"s2":{"titulo":"IA y competencias del siglo XXI","pregunta":"¿La IA desarrolla competencias o solo facilita el acceso a la información?","ideas":[{"titulo":"Competencias sobre contenidos","texto":"Pensamiento crítico, creatividad, colaboración y aprendizaje permanente hacen aplicable el saber disciplinar."},{"titulo":"Marcos que orientan","texto":"DigCompEdu, su suplemento de IA y el marco de la UNESCO ponen la tecnología al servicio del diseño."},{"titulo":"Acompañar, no responder","texto":"La IA aporta valor cuando orienta la reflexión y la retroalimentación, no cuando entrega respuestas."}],"frase_clave":"La tecnología no transforma la educación; la intención pedagógica sí."}},
+"documento":{
+"s1":{"titulo":"Enseñar cuando las respuestas son instantáneas","entradilla":"Un estudiante pide a un asistente de IA un ensayo sobre la reforma educativa y lo recibe en ocho segundos, bien redactado y con cinco referencias. Dos de ellas no existen. Esta escena, cada vez más común, resume el reto: la información abunda, pero el criterio para usarla no se genera solo.","preguntas_guia":["¿Qué cambia realmente en la enseñanza universitaria con la IA generativa?","¿Qué oportunidades ofrece para personalizar y acompañar el aprendizaje?","¿Qué riesgos exigen atención y cómo se gestionan?","¿Cómo se transforman los roles de docentes y estudiantes?"],"introduccion":"En este capítulo situamos la IA dentro de la evolución de la enseñanza universitaria, revisamos sus oportunidades y riesgos a partir de las orientaciones internacionales y proponemos criterios para que el docente mantenga las decisiones pedagógicas.",
+"secciones":[
+{"titulo":"Una etapa más de una evolución larga","bloques":[{"tipo":"parrafo","texto":"Internet, los entornos virtuales de aprendizaje y los recursos digitales ya habían cambiado la manera de acceder al conocimiento. La IA generativa añade algo distinto: no solo permite consultar información, también produce textos, imágenes y explicaciones a pedido. Por eso la UNESCO (2023) insiste en que el debate no debe centrarse en lo que la herramienta puede hacer, sino en las decisiones educativas que orientan su uso."},{"tipo":"definicion","termino":"IA generativa","texto":"Sistemas que producen contenido nuevo (texto, imagen, audio o código) a partir de instrucciones, prediciendo la continuación más probable según los datos con que fueron entrenados.","ejemplo":"Un asistente que redacta un resumen de un artículo a partir de la instrucción «resume en cinco puntos»."},{"tipo":"clave","texto":"El cambio de fondo es pedagógico: replantea cómo enseñamos, cómo aprenden los estudiantes y qué competencias necesitan."}]},
+{"titulo":"Oportunidades para personalizar y acompañar","bloques":[{"tipo":"parrafo","texto":"Bien integrada, la IA puede adaptar recursos al nivel de cada estudiante, ofrecer retroalimentación durante el proceso y apoyar al docente en la planificación y el diseño de evaluaciones. El tiempo que se ahorra en tareas operativas puede reinvertirse en lo que ninguna herramienta sustituye: el acompañamiento."},{"tipo":"tabla","titulo":"Oportunidades y condiciones para aprovecharlas","columnas":["Oportunidad","Qué permite","Condición pedagógica"],"filas":[["Personalización","Explicaciones y ejercicios según el nivel","Objetivos claros y revisión docente"],["Retroalimentación oportuna","Correcciones durante el proceso","Criterios explícitos, como una rúbrica"],["Apoyo a la planificación","Borradores de actividades y materiales","Adaptación al grupo y a la disciplina"]],"fuente":"Elaboración propia a partir de UNESCO (2023)"},{"tipo":"implicacion","texto":"Antes de usar IA para preparar un material, defina qué aprendizaje quiere favorecer; después, revise y adapte lo generado como lo haría con el borrador de un colega."}]},
+{"titulo":"Cuatro riesgos que exigen criterio","bloques":[{"tipo":"parrafo","texto":"Los modelos de lenguaje generan texto plausible, no verificado. Pueden producir datos inexactos o referencias inventadas con total seguridad. A ello se suman la privacidad de la información que se comparte, los sesgos presentes en los datos de entrenamiento y la dependencia, que aparece cuando la herramienta sustituye el análisis en lugar de apoyarlo."},{"tipo":"lista","items":["Exactitud: verificar con fuentes confiables antes de usar.","Privacidad: no ingresar datos personales ni calificaciones.","Sesgos: revisar qué perspectivas faltan o se estereotipan.","Dependencia: diseñar tareas donde el estudiante haga el trabajo intelectual."]},{"tipo":"clave","texto":"Una respuesta bien redactada no es una respuesta correcta."},{"tipo":"reflexion","texto":"¿Qué tarea de su curso podría resolverse hoy con IA sin que el estudiante aprenda lo que usted espera?"}]},
+{"titulo":"Roles que se amplían","bloques":[{"tipo":"parrafo","texto":"El OECD Teaching Compass (2025) describe la competencia docente como la capacidad de movilizar conocimientos, habilidades, actitudes y valores ante situaciones complejas mediante el juicio profesional. Con IA en el aula, ese juicio se vuelve central: decidir cuándo, cómo y para qué usarla. El estudiante, por su parte, deja de ser receptor y pasa a formular preguntas, contrastar fuentes y construir conocimiento."},{"tipo":"clave","texto":"La IA apoya; el docente decide."},{"tipo":"implicacion","texto":"Explicite en el programa del curso qué usos de IA están permitidos en cada actividad y qué evidencia de proceso pedirá."}]}],
+"referencias":["OECD. (2025). OECD Teaching Compass: Teacher competencies for navigating complexities. OECD.","Sánchez Molano, B., & López García, J. C. (2025). EdutekaLab: Inteligencia artificial al servicio del desarrollo de competencias del siglo XXI y el apoyo docente. Voces y Silencios, 16(2), 192–214.","UNESCO. (2023). Orientación sobre el uso de la inteligencia artificial generativa en la educación y la investigación. UNESCO."]},
+"s2":{"titulo":"De las respuestas a las competencias","entradilla":"Una calculadora no enseña a plantear un problema, pero obliga a decidir qué vale la pena aprender cuando el cálculo deja de ser el reto. Con la IA ocurre algo parecido en la escritura, el análisis y la creación.","preguntas_guia":["¿Qué competencias cobran relevancia en un entorno mediado por IA?","¿Qué marcos orientan al docente para integrarla?","¿En qué se diferencian el aprendizaje personalizado y el adaptativo?"],"introduccion":"Revisamos las competencias que la educación superior necesita promover, los marcos de referencia para el docente y las condiciones para que la IA acompañe el aprendizaje en lugar de sustituirlo.",
+"secciones":[
+{"titulo":"Competencias para un mundo con IA","bloques":[{"tipo":"parrafo","texto":"La UNESCO señala que las instituciones de educación superior deben formar pensamiento crítico, creatividad, colaboración, comunicación, resolución de problemas y aprendizaje permanente. Estas competencias no reemplazan el conocimiento disciplinar: lo vuelven aplicable en situaciones reales y cambiantes."},{"tipo":"definicion","termino":"Competencia","texto":"Movilización integrada de conocimientos, habilidades, actitudes y valores para actuar con eficacia en una situación concreta."}]},
+{"titulo":"Marcos que orientan al docente","bloques":[{"tipo":"tabla","columnas":["Marco","Aporte principal"],"filas":[["DigCompEdu (Redecker, 2017)","Seis áreas de competencia digital docente, del compromiso profesional a la competencia digital de los estudiantes"],["Suplemento de IA (Bekiaridis y Attwell, 2024)","Competencias de IA en cada área: evaluar contenido generado, enseñar sus límites, usarla para la inclusión"],["Marco de la UNESCO (2024)","Cinco dimensiones y tres niveles: adquirir, profundizar y crear"]]},{"tipo":"clave","texto":"La tecnología no transforma la educación; la intención pedagógica sí."}]},
+{"titulo":"Personalizado y adaptativo","bloques":[{"tipo":"parrafo","texto":"El aprendizaje personalizado parte de quién es el estudiante: sus intereses, necesidades y metas. El adaptativo parte de cómo se desempeña: ajusta la dificultad y los recursos según sus respuestas. Ambos pueden mejorar el rendimiento y la motivación cuando forman parte de un diseño con objetivos claros."},{"tipo":"implicacion","texto":"Si su grupo es heterogéneo, ofrezca rutas de entrada distintas hacia un mismo problema final con una sola rúbrica: personaliza sin bajar la exigencia."},{"tipo":"reflexion","texto":"¿Su curso necesita más personalización, más adaptación o ambas?"}]}],
+"referencias":["Bekiaridis, G., & Attwell, G. (2024). Supplement to the DigCompEDU framework. University of Bremen.","Redecker, C. (2017). European framework for the digital competence of educators: DigCompEdu. Publications Office of the European Union.","UNESCO. (2024). AI competency framework for teachers. UNESCO."]}},
+"ejemplos":{
+"s1":{"casos":[{"titulo":"EdutekaLab: IA para planificar en español","contexto":"Universidad Icesi, Colombia","descripcion":"Laboratorio en línea gratuito con herramientas de IA para planificar clases, crear rúbricas y gamificar. Los docentes encuestados destacaron el ahorro de tiempo en la planificación.","aprendizaje":"El ahorro de tiempo solo es valioso si se reinvierte en acompañar y si el docente revisa lo generado.","fuente":"Sánchez Molano, B., & López García, J. C. (2025). EdutekaLab. Voces y Silencios, 16(2), 192–214.","verificar":false,"seccion":"Oportunidades para personalizar y acompañar"},{"titulo":"Seis sentencias que nunca existieron","contexto":"Tribunal federal de Nueva York, 2023","descripcion":"Un abogado presentó un escrito preparado con ayuda de un chatbot que citaba seis decisiones judiciales inventadas. El juez sancionó al despacho.","aprendizaje":"La responsabilidad sobre el contenido es siempre de quien lo firma.","fuente":"Caso Mata v. Avianca (2023)","verificar":true,"seccion":"Cuatro riesgos que exigen criterio"}],
+"ejemplos":[{"titulo":"El resumen con referencias trampa","ambito":"Ciencias de la salud","situacion":"En Farmacología, los estudiantes piden a la IA un resumen del mecanismo de acción de un antihipertensivo con tres referencias.","desarrollo":"Verifican cada afirmación en guías clínicas y cada referencia en PubMed; marcan en verde lo correcto, en amarillo lo impreciso y en rojo lo inventado.","por_que_importa":"Convierte el riesgo de exactitud en una práctica de lectura crítica propia de la disciplina.","seccion":"Cuatro riesgos que exigen criterio"},{"titulo":"Casos de práctica ajustados a la ley local","ambito":"Derecho","situacion":"Una docente de Derecho Laboral necesita tres casos de distinta dificultad.","desarrollo":"La IA genera los borradores; la docente corrige supuestos que no corresponden al Código de Trabajo guatemalteco y los convierte en ejercicios.","por_que_importa":"Muestra que el valor está en el criterio profesional con que se adapta lo generado.","seccion":"Oportunidades para personalizar y acompañar"},{"titulo":"Pistas, no soluciones","ambito":"Ingeniería","situacion":"En Programación I, los estudiantes se atascan depurando código.","desarrollo":"Se configura un asistente que responde con preguntas y pistas; el estudiante explica en un comentario cuál era el error y por qué la solución funciona.","por_que_importa":"Evita la dependencia y deja el trabajo intelectual en manos del estudiante.","seccion":"Roles que se amplían"}],
+"pruebalo":{"titulo":"¿Quién inventó la máquina del tiempo?","consigna":"Pida a un asistente de IA: «Resume las tres principales investigaciones sobre aprendizaje adaptativo publicadas en Guatemala en 2022, con sus autores». Luego busque esas referencias.","que_observar":"Si aparecen títulos o autores que no encuentra en ninguna base de datos, acaba de ver una alucinación.","seccion":"Cuatro riesgos que exigen criterio"},
+"mala_practica":{"titulo":"Pegar el listado de notas en un chatbot","texto":"Un coordinador copia en un asistente gratuito el listado completo del curso (carné, nombre, notas) para pedir un análisis de rendimiento.","por_que":"Expone datos personales a un servicio externo. Anonimice los datos o use una herramienta institucional con garantías de privacidad.","seccion":"Cuatro riesgos que exigen criterio"},"pregunta_discusion":"¿Qué tarea de su curso rediseñaría primero para que la IA apoye el aprendizaje en lugar de sustituirlo?"},
+"s2":{"casos":[{"titulo":"Un tutor de física diseñado con principios de aprendizaje activo","contexto":"Harvard University, 2025","descripcion":"En un ensayo aleatorizado, un tutor de IA construido con andamiaje, retroalimentación y ritmo propio produjo mayores ganancias de aprendizaje que una clase activa presencial.","aprendizaje":"La competencia la desarrolla el diseño pedagógico que la IA ejecuta.","fuente":"Kestin et al. (2025). Scientific Reports, 15, 17458.","verificar":true,"seccion":"Personalizado y adaptativo"}],
+"ejemplos":[{"titulo":"La IA como abogado del diablo","ambito":"Derecho","situacion":"Los estudiantes preparan una posición sobre un caso constitucional.","desarrollo":"Piden a la IA los tres contraargumentos más fuertes y responden a cada uno con fundamento normativo y jurisprudencial.","por_que_importa":"Entrena el pensamiento crítico y la argumentación.","seccion":"Competencias para un mundo con IA"},{"titulo":"Generar diez, conservar uno","ambito":"Ingeniería civil","situacion":"Un equipo diseña un sistema de captación de agua de lluvia para una escuela rural.","desarrollo":"La IA propone diez alternativas; el equipo descarta siete con criterios explícitos (costo, mantenimiento, contexto) y desarrolla una propuesta propia.","por_que_importa":"La creatividad aparece al evaluar y combinar, no al generar.","seccion":"Competencias para un mundo con IA"},{"titulo":"Retroalimentación antes de entregar","ambito":"Educación","situacion":"Futuros docentes redactan una planificación de clase.","desarrollo":"Con la rúbrica del curso, la IA comenta el borrador sin reescribirlo; cada estudiante decide qué sugerencias acepta y lo justifica.","por_que_importa":"Fortalece la autorregulación y el aprendizaje autónomo.","seccion":"Marcos que orientan al docente"}],
+"pruebalo":{"titulo":"Respuesta o andamiaje","consigna":"Haga la misma pregunta de su disciplina dos veces: primero pidiendo la respuesta y después pidiendo «hazme preguntas que me lleven a la respuesta».","que_observar":"Compare en cuál de las dos versiones usted tuvo que pensar más.","seccion":"Personalizado y adaptativo"},"pregunta_discusion":"¿Qué competencia del siglo XXI puede fortalecer su próxima actividad con IA, y cómo lo comprobaría?"}}}};
+
+/* =============== arranque =============== */
+async function boot() {
+  fillForm(); go(1);
+  if (!window.claude || !window.claude.use) { P.engine = 'externo'; return; }
+  const [s, db, dl, user] = await Promise.all(['sample', 'db', 'downloads', 'user'].map(n => window.claude.use(n).catch(() => null)));
+  caps.sample = s; caps.db = db; caps.downloads = dl;
+  if (user) { try { caps.uid = await user.id(); } catch {} }
+  if (!caps.uid) caps.db = null;
+  if (!s && P.engine === 'claude') P.engine = 'externo';
+  await refreshList(); if (step === 3) renderMatrix();
+}
+boot();
+})();
+</script>
+
+</body></html>
